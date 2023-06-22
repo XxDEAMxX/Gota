@@ -23,9 +23,9 @@ public class Payments extends AppCompatActivity {
     private RecyclerView payments;
     private ArrayList<com.deam.gota.pojos.Payments> listPayment;
     private int id;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payments);
 
@@ -42,24 +42,20 @@ public class Payments extends AppCompatActivity {
 
         payments = findViewById(R.id.list);
 
-
         payments.setLayoutManager(new LinearLayoutManager(this));
         
         DbPayments dbPayments = new DbPayments(Payments.this);
 
-        listPayment = new ArrayList<>();
+        listPayment = dbPayments.showPayments();
 
-        for (int i = 1; i <= dbPayments.showPayments().size(); i++) {
-            if(dbPayments.showPayments().get(i).getId()==id){
-                listPayment.add(dbPayments.showPayment(i));
+        for (int i = 0; i < listPayment.size(); i++){
+            if(listPayment.get(i).getIdLoans() != id){
+                listPayment.remove(i);
             }
         }
 
-        Toast.makeText(this, listPayment.size()+"", Toast.LENGTH_SHORT).show();
-
-
-       // ListPaymentAdapter adapter = new ListPaymentAdapter(id, listPayment);
-        //payments.setAdapter(adapter);
+        ListPaymentAdapter adapter = new ListPaymentAdapter(listPayment);
+        payments.setAdapter(adapter);
 
     }
 }

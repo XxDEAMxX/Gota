@@ -30,7 +30,7 @@
                 android:layout_centerVertical="true"
                 android:paddingLeft="14dp"
                 android:paddingRight="14dp"
-                android:src="@drawable/person"
+                android:src="@drawable/payments"
                 android:layout_alignParentLeft="true">
             </ImageView>
             <LinearLayout

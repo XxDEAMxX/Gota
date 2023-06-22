@@ -20,7 +20,7 @@ public class SQLOHelperPayments extends SQLiteOpenHelper{
     public void onCreate(SQLiteDatabase dataBase) {
         dataBase.execSQL("CREATE TABLE " + TABLA_PAYMENTS + "(" +
                 "id Integer PRIMARY KEY AUTOINCREMENT,"+
-                "idLoan text NOT NULL,"+
+                "idLoan int NOT NULL,"+
                 "date text NOT NULL,"+
                 "amount int NOT NULL)");
     }

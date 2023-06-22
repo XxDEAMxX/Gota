@@ -17,15 +17,12 @@ public class Payments {
     public int getId() {
         return id;
     }
-
     public void setId(int id) {
         this.id = id;
     }
-
     public int getIdLoans() {
         return idLoans;
     }
-
     public void setIdLoans(int idLoans) {
         this.idLoans = idLoans;
     }
