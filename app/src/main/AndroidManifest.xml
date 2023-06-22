@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Gota"
+        tools:targetApi="31">
+        <activity
+            android:name=".model.loans.Payments"
+            android:exported="false" />
+        <activity
+            android:name=".model.loans.ShowDataLoan"
+            android:exported="false" />
+        <activity
+            android:name=".model.loans.ShowLoans"
+            android:exported="false" />
+        <activity
+            android:name=".model.clients.EditClient"
+            android:exported="false" />
+        <activity
+            android:name=".model.clients.ShowClients"
+            android:exported="false" />
+        <activity
+            android:name=".model.clients.ShowDataClient"
+            android:exported="false" />
+        <activity
+            android:name=".model.loans.AddLoan"
+            android:exported="false" />
+        <activity
+            android:name=".model.loans.ShowClientToLoan"
+            android:exported="false" />
+        <activity
+            android:name=".model.clients.AddClient"
+            android:exported="false" />
+        <activity
+            android:name=".model.MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

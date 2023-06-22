@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">Gota</string>
+    <string name="nameText_string">Nombres</string>
+    <string name="lastNameText_string">Apellidos</string>
+    <string name="addressHomeText_string">Dirección del hogar</string>
+    <string name="addressJobText_string">Dirección del trabajo</string>
+    <string name="phoneNumberText_string">Número de telefono</string>
+    <string name="add_string">Añadir</string>
+    <string name="button_add_client_string">Añadir nuevo cliente</string>
+    <string name="button_add_loan_string">Añadir nuevo prestamos</string>
+    <string name="button_show_loans_string">Prestamos</string>
+    <string name="button_show_clients_string">Clientes</string>
+    <string name="search">Buscar</string>
+    <string name="title_activity_principal">Principal</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+</resources>
