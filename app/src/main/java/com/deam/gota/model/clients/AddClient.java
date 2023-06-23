@@ -19,14 +19,11 @@ import com.deam.gota.model.loans.ShowClientToLoan;
 
 public class AddClient extends AppCompatActivity {
 
-
     private EditText name;
     private EditText lastName;
     private EditText addressHome;
     private EditText addressJob;
     private EditText phoneNumber;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +93,7 @@ public class AddClient extends AppCompatActivity {
                     addressHome.setText("");
                     addressJob.setText("");
                     phoneNumber.setText("");
+                    finish();
                 } else {
                     Toast.makeText(this, "ERROR AL GUARDAR REGISTRO ", Toast.LENGTH_SHORT).show();
                 }

@@ -3,6 +3,7 @@ package com.deam.gota.model.loans;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 import com.deam.gota.R;
 import com.deam.gota.dataBases.DbClients;
 import com.deam.gota.dataBases.DbLoans;
+import com.deam.gota.model.MainActivity;
 import com.deam.gota.pojos.Clients;
 
 import java.util.Calendar;
@@ -124,6 +126,7 @@ public class AddLoan extends AppCompatActivity {
 
             if (id > 0) {
                 Toast.makeText(this, "REGISTRO GUARDADO", Toast.LENGTH_SHORT).show();
+                finish();
             } else {
                 Toast.makeText(this, "ERROR AL GUARDAR REGISTRO ", Toast.LENGTH_SHORT).show();
             }

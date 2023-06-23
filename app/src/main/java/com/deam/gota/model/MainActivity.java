@@ -6,6 +6,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.Manifest;
 import android.content.Intent;
@@ -38,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
     private EditText search;
     private RecyclerView loans;
     private ArrayList<Loans> listLoans;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    ListLoanAdapter adapter;
 
     public MainActivity(){
     }
@@ -46,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         verificarPermisos();
+
+        swipeRefreshLayout = findViewById(R.id.refresh);
+
 
 
         fabAddClient = findViewById(R.id.fabAddClient);
@@ -63,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
         listLoans = new ArrayList<>();
         dbLoans.showLoans().size();
-        ListLoanAdapter adapter = new ListLoanAdapter(dbLoans.showLoans(), dbClients.showClients());
+        adapter = new ListLoanAdapter(dbLoans.showLoans(), dbClients.showClients());
 
         loans.setAdapter(adapter);
 
@@ -85,6 +91,23 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showClientMenu();
+            }
+        });
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                swipeRefreshLayout.setRefreshing(false);
+                //startActivity(intent);
+                //finish();
+
+                listLoans = new ArrayList<>();
+                dbLoans.showLoans().size();
+                ListLoanAdapter adapter = new ListLoanAdapter(dbLoans.showLoans(), dbClients.showClients());
+
+                loans.setAdapter(adapter);
+
             }
         });
 
@@ -112,11 +135,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void showClientMenu(){
         Intent intent = new Intent(this, ShowClients.class);
-        startActivity(intent);
-    }
-
-    public void showLoansMenu(){
-        Intent intent = new Intent(this, ShowLoans.class);
         startActivity(intent);
     }
 

@@ -33,7 +33,7 @@
         android:layout_width="218dp"
         android:layout_height="58dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="10dp"
         android:ems="10"
         android:hint="@string/search"
         android:inputType="text"
@@ -48,27 +48,43 @@
         android:id="@+id/seachButtonToClientToEdit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="10dp"
         android:text="buscar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/searchClientToEdit"
         app:layout_constraintTop_toBottomOf="@+id/toolbar3" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/list"
-        android:layout_width="332dp"
-        android:layout_height="match_parent"
 
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="180dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="120dp"
-        android:textAlignment="center"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="140dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.627"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchClientToEdit" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/list"
+            android:layout_width="332dp"
+            android:layout_height="match_parent"
+
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="180dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="120dp"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.627"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/searchClientToEdit" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddClient"
@@ -85,23 +101,22 @@
         android:id="@+id/fabShowClients"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
         android:layout_marginBottom="30dp"
         android:clickable="true"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/fabAddClient"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/person" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddLoan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
         android:layout_marginBottom="30dp"
         android:clickable="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/fabShowClients"
+        app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/loan_add" />
 
 
