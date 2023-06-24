@@ -28,6 +28,7 @@ import com.deam.gota.dataBases.DbLoans;
 import com.deam.gota.dataBases.DbPayments;
 import com.deam.gota.model.clients.AddClient;
 import com.deam.gota.model.clients.ShowClients;
+import com.deam.gota.model.expenses.Expenses;
 import com.deam.gota.model.loans.ShowClientToLoan;
 import com.deam.gota.model.loans.ShowLoans;
 import com.deam.gota.pojos.Loans;
@@ -40,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     private int REQUEST_CODE = 200;
 
-    private FloatingActionButton fabAddClient, fabAddLoan, fabShowClients, fabReset;
+    private FloatingActionButton fabAddClient, fabAddLoan, fabShowClients, fabReset, fabExpenses;
     private SearchView search;
     private RecyclerView loans;
     private ArrayList<Loans> listLoans;
@@ -65,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         fabAddLoan = findViewById(R.id.fabAddLoan);
         fabShowClients = findViewById(R.id.fabShowClients);
         fabReset = findViewById(R.id.reset);
+        fabExpenses = findViewById(R.id.fabExpenses);
 
         search  = findViewById(R.id.searchLoan);
         loans = findViewById(R.id.list);
@@ -107,10 +109,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                //Intent intent = new Intent(MainActivity.this, MainActivity.class);
                 swipeRefreshLayout.setRefreshing(false);
-                //startActivity(intent);
-                //finish();
 
                 listLoans = new ArrayList<>();
                 dbLoans.showLoans().size();
@@ -137,7 +136,16 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             }
         });
 
+        fabExpenses.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, Expenses.class);
+                startActivity(intent);
+            }
+        });
+
     }
+
 
     public void TotalPaymentsDay(){
         int totalI = 0;

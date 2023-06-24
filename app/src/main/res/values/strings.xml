@@ -5,7 +5,7 @@
     <string name="addressHomeText_string">Dirección 1</string>
     <string name="addressJobText_string">Dirección 2</string>
     <string name="phoneNumberText_string">Número de telefono</string>
-    <string name="add_string">Añadir</string>
+    <string name="add_string">AÑADIR</string>
     <string name="button_add_client_string">Añadir nuevo cliente</string>
     <string name="button_add_loan_string">Añadir nuevo prestamos</string>
     <string name="button_show_loans_string">Prestamos</string>

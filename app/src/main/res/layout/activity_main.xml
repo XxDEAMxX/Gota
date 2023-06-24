@@ -64,6 +64,13 @@
             android:layout_height="wrap_content"
             android:text="TextView" />
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floatingActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            app:srcCompat="@drawable/request_quote" />
+
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -135,6 +142,18 @@
         app:layout_constraintBottom_toBottomOf="@+id/refresh"
         app:layout_constraintEnd_toStartOf="@+id/fabAddClient"
         app:layout_constraintStart_toEndOf="@+id/reset" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabExpenses"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="30dp"
+        android:clickable="true"
+        app:backgroundTint="@color/colorButton"
+        app:layout_constraintBottom_toTopOf="@+id/fabAddLoan"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/request_quote" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
