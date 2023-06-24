@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     private int REQUEST_CODE = 200;
 
-    private FloatingActionButton fabAddClient, fabAddLoan, fabShowClients, fabReset, fabExpenses;
+    private FloatingActionButton fabAddLoan, fabShowClients, fabReset, fabExpenses;
     private SearchView search;
     private RecyclerView loans;
     private ArrayList<Loans> listLoans;
@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         total = findViewById(R.id.total);
 
-        fabAddClient = findViewById(R.id.fabAddClient);
         fabAddLoan = findViewById(R.id.fabAddLoan);
         fabShowClients = findViewById(R.id.fabShowClients);
         fabReset = findViewById(R.id.reset);
@@ -84,13 +83,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         loans.setAdapter(adapter);
 
         TotalPaymentsDay();
-
-        fabAddClient.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addClientMenu();
-            }
-        });
 
         fabAddLoan.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -172,12 +164,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         if(permiso != PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CALL_PHONE},REQUEST_CODE);
         }
-    }
-
-
-    public void addClientMenu(){
-        Intent intent = new Intent(this, AddClient.class);
-        startActivity(intent);
     }
 
     public void addLoanMenu(){
