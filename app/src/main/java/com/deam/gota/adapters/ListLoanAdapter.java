@@ -98,15 +98,16 @@ public class ListLoanAdapter extends RecyclerView.Adapter<ListLoanAdapter.Client
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Context context = v.getContext();
-                    Toast.makeText(context, listSearchLoan.size()+"", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(context, ShowDataLoan.class);
-                    intent.putExtra("ID", listSearchLoan.get(getAdapterPosition()).getLoans().getId());
-                    context.startActivity(intent);
-
+                    if(listSearchLoan.get(getAdapterPosition()).getLoans()!=null) {
+                        Context context = v.getContext();
+                        Intent intent = new Intent(context, ShowDataLoan.class);
+                        intent.putExtra("ID", listSearchLoan.get(getAdapterPosition()).getLoans().getId());
+                        context.startActivity(intent);
+                    }else {
+                        Toast.makeText(v.getContext(), "EL REGISTRO NO EXISTE", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
         }
-
     }
 }

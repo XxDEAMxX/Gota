@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Gota</string>
+    <string name="app_name">Droplet</string>
     <string name="nameText_string">Nombres</string>
     <string name="lastNameText_string">Apellidos</string>
     <string name="addressHomeText_string">Dirección 1</string>

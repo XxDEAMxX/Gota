@@ -115,7 +115,7 @@ public class DbPayments extends SQLOHelperPayments {
         return correct;
     }
 
-    public boolean deleteClient(int id){
+    public boolean deletePayment(int id){
         boolean correct = false;
 
         SQLOHelperLoans sqloHelperLoans = new SQLOHelperLoans(context);

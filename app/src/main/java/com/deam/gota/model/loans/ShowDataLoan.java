@@ -38,37 +38,39 @@ public class ShowDataLoan extends AppCompatActivity {
     private EditText quotas;
     private EditText loan;
     private FloatingActionButton fabEdit, fabDelete, fabShowPayments;
-    private EditText amountEditText, routeEditText;
+    private EditText amountEditText, routeEditText, balanceFaulty;
     private Button amountButton, routeButton;
+    private DbPayments dbPayments;
 
     private Loans loans;
     private Clients client;
     private int id;
     private boolean correct = false;
-
+    private int saldo = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_data_loan);
 
-        name = findViewById(R.id.showDataLoanNameText);
-        lastName = findViewById(R.id.showDataLoanLastNameText);
-        addressHome = findViewById(R.id.showDataLoanAddressHomeText);
-        addressJob = findViewById(R.id.showDataLoanAddressJobText);
-        phoneNumber = findViewById(R.id.showDataLoanPhoneNumberText);
-        date = findViewById(R.id.showDataLoanDateText);
-        quotas = findViewById(R.id.showDataLoanQuotasText);
-        loan = findViewById(R.id.showDataLoanLoanText);
-        amountEditText = findViewById(R.id.amountEditText);
-        routeEditText = findViewById(R.id.routeEditText);
+        name            =   findViewById(R.id.showDataLoanNameText);
+        lastName        =   findViewById(R.id.showDataLoanLastNameText);
+        addressHome     =   findViewById(R.id.showDataLoanAddressHomeText);
+        addressJob      =   findViewById(R.id.showDataLoanAddressJobText);
+        phoneNumber     =   findViewById(R.id.showDataLoanPhoneNumberText);
+        date            =   findViewById(R.id.showDataLoanDateText);
+        quotas          =   findViewById(R.id.showDataLoanQuotasText);
+        loan            =   findViewById(R.id.showDataLoanLoanText);
+        amountEditText  =   findViewById(R.id.amountEditText);
+        routeEditText   =   findViewById(R.id.routeEditText);
+        balanceFaulty   =   findViewById(R.id.balanceFaulty);
 
-        amountButton = findViewById(R.id.amountButton);
-        routeButton = findViewById(R.id.routeButton);
+        amountButton    =   findViewById(R.id.amountButton);
+        routeButton     =   findViewById(R.id.routeButton);
 
-        fabEdit = findViewById(R.id.fabEditLoan);
-        fabDelete = findViewById(R.id.fabDeleteLoan);
-        fabShowPayments = findViewById(R.id.fabShowPayments);
+        fabEdit         =   findViewById(R.id.fabEditLoan);
+        fabDelete       =   findViewById(R.id.fabDeleteLoan);
+        fabShowPayments =   findViewById(R.id.fabShowPayments);
 
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
@@ -83,8 +85,20 @@ public class ShowDataLoan extends AppCompatActivity {
 
         DbLoans dbLoans = new DbLoans(ShowDataLoan.this);
         DbClients dbClients = new DbClients(ShowDataLoan.this);
+        dbPayments = new DbPayments(ShowDataLoan.this);
         loans = dbLoans.showLoan(id);
         client = dbClients.showClient(loans.getIdClient());
+
+        saldo = Integer.parseInt(loans.getLoan());
+
+        for(int i = 0; i < dbPayments.showPayments().size(); i++){
+            if(loans.getId() == dbPayments.showPayments().get(i).getIdLoans()){
+                saldo-=dbPayments.showPayments().get(i).getAmount();
+            }
+        }
+        Toast.makeText(ShowDataLoan.this, saldo+"", Toast.LENGTH_SHORT).show();
+        balanceFaulty.setText(saldo+"");
+
 
         if (loans != null) {
             name.setText(client.getName());
@@ -96,6 +110,7 @@ public class ShowDataLoan extends AppCompatActivity {
             quotas.setText(loans.getQuotas());
             loan.setText(loans.getLoan());
             routeEditText.setHint(loans.getRoute()+"");
+            balanceFaulty.setInputType(InputType.TYPE_NULL);
             name.setInputType(InputType.TYPE_NULL);
             lastName.setInputType(InputType.TYPE_NULL);
             addressHome.setInputType(InputType.TYPE_NULL);
@@ -126,6 +141,11 @@ public class ShowDataLoan extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if(dbLoans.deleteClient(loans.getId())){
+                            for(int i = 0; i < dbPayments.showPayments().size(); i++) {
+                                if(loans.getId() == dbPayments.showPayments().get(i).getIdLoans()) {
+                                    dbPayments.deletePayment(dbPayments.showPayments().get(i).getId());
+                                }
+                            }
                             finish();
                         }
                     }
@@ -156,6 +176,17 @@ public class ShowDataLoan extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 addPayment();
+                saldo = Integer.parseInt(loans.getLoan());
+
+
+
+                for(int i = 0; i < dbPayments.showPayments().size(); i++){
+                    if(loans.getId() == dbPayments.showPayments().get(i).getIdLoans()){
+                        saldo-=dbPayments.showPayments().get(i).getAmount();
+                    }
+                }
+                Toast.makeText(ShowDataLoan.this, saldo+"", Toast.LENGTH_SHORT).show();
+                balanceFaulty.setText(saldo+"");
             }
         });
 
@@ -216,7 +247,7 @@ public class ShowDataLoan extends AppCompatActivity {
 
         if(!amountEditText.getText().toString().isEmpty()){
 
-            DbPayments dbPayments = new DbPayments(this);
+            dbPayments = new DbPayments(this);
             long id = dbPayments.insertPayments(loans.getId(), fecha, amount);
 
 
