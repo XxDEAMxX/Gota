@@ -21,6 +21,7 @@ import com.deam.gota.dataBases.DbClients;
 import com.deam.gota.dataBases.DbLoans;
 import com.deam.gota.dataBases.DbPayments;
 import com.deam.gota.model.clients.EditClient;
+import com.deam.gota.model.clients.ShowClients;
 import com.deam.gota.pojos.Clients;
 import com.deam.gota.pojos.Loans;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -43,6 +44,7 @@ public class ShowDataLoan extends AppCompatActivity {
     private Loans loans;
     private Clients client;
     private int id;
+    private boolean correct = false;
 
 
     @Override
@@ -82,7 +84,7 @@ public class ShowDataLoan extends AppCompatActivity {
         DbLoans dbLoans = new DbLoans(ShowDataLoan.this);
         DbClients dbClients = new DbClients(ShowDataLoan.this);
         loans = dbLoans.showLoan(id);
-        client = dbClients.showClient(loans.getIdClient()+1);
+        client = dbClients.showClient(loans.getIdClient());
 
         if (loans != null) {
             name.setText(client.getName());
@@ -93,6 +95,7 @@ public class ShowDataLoan extends AppCompatActivity {
             date.setText(loans.getDate());
             quotas.setText(loans.getQuotas());
             loan.setText(loans.getLoan());
+            routeEditText.setHint(loans.getRoute()+"");
             name.setInputType(InputType.TYPE_NULL);
             lastName.setInputType(InputType.TYPE_NULL);
             addressHome.setInputType(InputType.TYPE_NULL);
@@ -122,8 +125,7 @@ public class ShowDataLoan extends AppCompatActivity {
                 builder.setMessage("¿DESEA ELIMINAR ESTE CLIENTE?").setPositiveButton("SI", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if(dbLoans.deleteClient(loan.getId())){
-                            intentShow();
+                        if(dbLoans.deleteClient(loans.getId())){
                             finish();
                         }
                     }
@@ -161,6 +163,31 @@ public class ShowDataLoan extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showPayments();
+            }
+        });
+
+        routeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!routeEditText.getText().toString().equals("")){
+                    correct = dbLoans.editLoan(
+                            id,
+                            dbLoans.showLoan(id).getIdClient(),
+                            Integer.parseInt(routeEditText.getText().toString()),
+                            date.getText().toString(),
+                            quotas.getText().toString(),
+                            loan.getText().toString()
+                           );
+
+                    if(correct){
+                        Toast.makeText(ShowDataLoan.this, "REGISTRO MODIFICADO", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }else {
+                        Toast.makeText(ShowDataLoan.this, "ERROR AL MODIFICAR REGISTRO", Toast.LENGTH_SHORT).show();
+                    }
+                }else {
+                    Toast.makeText(ShowDataLoan.this, "DEBE LLENAR LOS CAMPOS", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

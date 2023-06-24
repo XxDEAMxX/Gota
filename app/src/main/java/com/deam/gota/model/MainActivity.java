@@ -17,6 +17,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.deam.gota.R;
 import com.deam.gota.adapters.ListLoanAdapter;
@@ -31,12 +33,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     private int REQUEST_CODE = 200;
 
-    private FloatingActionButton fabAddClient, fabAddLoan, fabShowClients;
-    private EditText search;
+    private FloatingActionButton fabAddClient, fabAddLoan, fabShowClients, fabReset;
+    private SearchView search;
     private RecyclerView loans;
     private ArrayList<Loans> listLoans;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -57,8 +59,9 @@ public class MainActivity extends AppCompatActivity {
         fabAddClient = findViewById(R.id.fabAddClient);
         fabAddLoan = findViewById(R.id.fabAddLoan);
         fabShowClients = findViewById(R.id.fabShowClients);
+        fabReset = findViewById(R.id.reset);
 
-        search  = findViewById(R.id.searchClientToEdit);
+        search  = findViewById(R.id.searchLoan);
         loans = findViewById(R.id.list);
 
 
@@ -111,6 +114,25 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        search.setOnQueryTextListener(this);
+
+        fabReset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean correct = false;
+                correct = dbLoans.resetRoute();
+                if(correct){
+                    Toast.makeText(MainActivity.this, "RUTA REINICIADA", Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(MainActivity.this, "ERROR AL REINICIAR LA RUTA", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+    }
+
+    public void reset(){
+
     }
 
     public void verificarPermisos(){
@@ -138,4 +160,14 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        adapter.filter(newText);
+        return false;
+    }
 }

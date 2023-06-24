@@ -46,11 +46,11 @@ public class Payments extends AppCompatActivity {
         
         DbPayments dbPayments = new DbPayments(Payments.this);
 
-        listPayment = dbPayments.showPayments();
+        listPayment=new ArrayList<>();
 
-        for (int i = 0; i < listPayment.size(); i++){
-            if(listPayment.get(i).getIdLoans() != id){
-                listPayment.remove(i);
+        for (int i = 0; i < dbPayments.showPayments().size(); i++){
+            if(dbPayments.showPayments().get(i).getIdLoans() == id){
+                listPayment.add(dbPayments.showPayments().get(i));
             }
         }
 

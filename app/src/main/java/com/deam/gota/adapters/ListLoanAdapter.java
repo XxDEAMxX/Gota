@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,38 +15,75 @@ import com.deam.gota.R;
 import com.deam.gota.model.loans.ShowDataLoan;
 import com.deam.gota.pojos.Clients;
 import com.deam.gota.pojos.Loans;
+import com.deam.gota.pojos.SearchLoan;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ListLoanAdapter extends RecyclerView.Adapter<ListLoanAdapter.ClientViewHolder> {
 
-    ArrayList<Loans> listLoans;
-    ArrayList<Clients> listClients;
+    ArrayList<SearchLoan> listSearchLoan;
+    ArrayList<SearchLoan> listOrigin;
+
 
     public ListLoanAdapter(ArrayList<Loans> listLoans, ArrayList<Clients> listClients){
-        this.listLoans = listLoans;
-        this.listClients = listClients;
+        listSearchLoan = new ArrayList<>();
+        listOrigin = new ArrayList<>();
+        for(int i = 0; i < listLoans.size(); i++){
+            for (int j = 0; j < listClients.size(); j++) {
+                if(listLoans.get(i).getIdClient()==listClients.get(j).getId()){
+                    listSearchLoan.add(new SearchLoan(listLoans.get(i),listClients.get(j)));
+                }
+            }
+        }
+        listOrigin.addAll(listSearchLoan);
+
+        Collections.sort(listSearchLoan, new Comparator<SearchLoan>() {
+            @Override
+            public int compare(SearchLoan o1, SearchLoan o2) {
+                    return new Integer(o1.getLoans().getRoute()).compareTo(new Integer(o2.getLoans().getRoute()));
+            }
+        });
+
     }
 
     @NonNull
     @Override
     public ListLoanAdapter.ClientViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_element, null, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_element_loans, null, false);
         return new ListLoanAdapter.ClientViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ListLoanAdapter.ClientViewHolder holder, int position) {
 
-        holder.searchNameToLoan.setText(listClients.get(listLoans.get(position).getIdClient()).getName());
-        holder.viewPhoneNumber.setText(listClients.get(listLoans.get(position).getIdClient()).getPhoneNumber());
-        holder.viewAddressHome.setText(listClients.get(listLoans.get(position).getIdClient()).getAddressHome());
+        holder.searchNameToLoan.setText(listSearchLoan.get(position).getClients().getName());
+        holder.viewPhoneNumber.setText(listSearchLoan.get(position).getClients().getPhoneNumber());
+        holder.viewAddressHome.setText(listSearchLoan.get(position).getClients().getAddressHome());
         
+    }
+
+    public void filter(String search){
+        int lenght = search.length();
+        if(lenght==0){
+            listSearchLoan.clear();
+            listSearchLoan.addAll(listOrigin);
+        }else {
+            List<SearchLoan> colletion = listSearchLoan.stream()
+                    .filter(i -> i.getClients().getName().toLowerCase().contains(search.toLowerCase()))
+                    .collect(Collectors.toList());
+            listSearchLoan.clear();
+            listSearchLoan.addAll(colletion);
+        }
+        notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
-        return listLoans.size();
+        return listSearchLoan.size();
     }
 
     public class ClientViewHolder extends RecyclerView.ViewHolder {
@@ -61,8 +99,9 @@ public class ListLoanAdapter extends RecyclerView.Adapter<ListLoanAdapter.Client
                 @Override
                 public void onClick(View v) {
                     Context context = v.getContext();
+                    Toast.makeText(context, listSearchLoan.size()+"", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(context, ShowDataLoan.class);
-                    intent.putExtra("ID", listLoans.get(getAdapterPosition()).getId());
+                    intent.putExtra("ID", listSearchLoan.get(getAdapterPosition()).getLoans().getId());
                     context.startActivity(intent);
 
                 }

@@ -28,32 +28,6 @@
         android:orientation="vertical"
         app:layout_constraintGuide_begin="20dp" />
 
-    <EditText
-        android:id="@+id/searchClientToEdit"
-        android:layout_width="218dp"
-        android:layout_height="58dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="10dp"
-        android:ems="10"
-        android:hint="@string/search"
-        android:inputType="text"
-        android:textColor="@color/white"
-        android:textColorHint="@color/colorHint"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar3" />
-
-    <Button
-        android:id="@+id/seachButtonToClientToEdit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="buscar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/searchClientToEdit"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar3" />
-
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/refresh"
@@ -118,6 +92,25 @@
         app:layout_constraintBottom_toTopOf="@+id/fabShowClients"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/loan_add" />
+
+    <SearchView
+        android:id="@+id/searchLoan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="70dp"
+        app:layout_constraintTop_toTopOf="@+id/toolbar3"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/reset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginBottom="30dp"
+        android:clickable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/restart" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

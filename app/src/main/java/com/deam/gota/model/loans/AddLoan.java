@@ -33,6 +33,8 @@ public class AddLoan extends AppCompatActivity {
     private TextView phoneNumber;
     private Button add;
 
+    private DbClients dbClients;
+
     private Clients clients;
     private int id = 0;
 
@@ -66,7 +68,7 @@ public class AddLoan extends AppCompatActivity {
             id = (int) savedInstanceState.getSerializable("ID");
         }
 
-        DbClients dbClients = new DbClients(AddLoan.this);
+        dbClients = new DbClients(AddLoan.this);
         clients = dbClients.showClient(id);
 
         if (clients != null) {
@@ -122,7 +124,7 @@ public class AddLoan extends AppCompatActivity {
         if (!dateS.isEmpty() && !quotasS.isEmpty() && !loanS.isEmpty()) {
 
             DbLoans dbLoans = new DbLoans(this);
-            long id = dbLoans.insertLoan(clients.getId()-1, 0, dateS, quotasS,loanS);
+            long id = dbLoans.insertLoan(clients.getId(), dbLoans.showLoans().size()+1, dateS, quotasS,loanS);
 
             if (id > 0) {
                 Toast.makeText(this, "REGISTRO GUARDADO", Toast.LENGTH_SHORT).show();

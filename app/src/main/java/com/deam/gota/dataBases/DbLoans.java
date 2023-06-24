@@ -99,16 +99,37 @@ public class DbLoans extends SQLOHelperLoans {
         return loans;
     }
 
-    public boolean editClient(int id, String date, String quotas, String loan){
+    public boolean editLoan(int id, int idClient, int route, String date, String quotas, String loan){
         boolean correct = false;
 
         SQLOHelperLoans sqloHelperLoans = new SQLOHelperLoans(context);
         SQLiteDatabase db = sqloHelperLoans.getWritableDatabase();
 
         try {
-            db.execSQL("UPDATE " + TABLA_LOANS + " SET date = '" + date + "', " +
+            db.execSQL("UPDATE " + TABLA_LOANS + " SET idClient = '" + idClient + "', " +
+                    "route = '" + route + "', " +
+                    "date = '" + date + "', " +
                     "quotas = '" + quotas + "', " +
                     "loan = '" + loan + "' WHERE id = '" + id + "'");
+            correct = true;
+
+        }catch (Exception e){
+            e.toString();
+            correct = false;
+        } finally {
+            db.close();
+        }
+        return correct;
+    }
+
+    public boolean resetRoute(){
+        boolean correct = false;
+
+        SQLOHelperLoans sqloHelperLoans = new SQLOHelperLoans(context);
+        SQLiteDatabase db = sqloHelperLoans.getWritableDatabase();
+
+        try {
+            db.execSQL("UPDATE " + TABLA_LOANS + " SET route = '" + showLoans().size() + "'");
             correct = true;
 
         }catch (Exception e){
