@@ -38,7 +38,7 @@ public class ShowDataLoan extends AppCompatActivity {
     private EditText quotas;
     private EditText loan;
     private FloatingActionButton fabEdit, fabDelete, fabShowPayments;
-    private EditText amountEditText, routeEditText, balanceFaulty;
+    private EditText amountEditText, routeEditText, balanceFaulty, paymentCredits;
     private Button amountButton, routeButton;
     private DbPayments dbPayments;
 
@@ -46,12 +46,13 @@ public class ShowDataLoan extends AppCompatActivity {
     private Clients client;
     private int id;
     private boolean correct = false;
-    private int saldo = 0;
+    private int saldo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_data_loan);
+        saldo = 0;
 
         name            =   findViewById(R.id.showDataLoanNameText);
         lastName        =   findViewById(R.id.showDataLoanLastNameText);
@@ -64,6 +65,7 @@ public class ShowDataLoan extends AppCompatActivity {
         amountEditText  =   findViewById(R.id.amountEditText);
         routeEditText   =   findViewById(R.id.routeEditText);
         balanceFaulty   =   findViewById(R.id.balanceFaulty);
+        paymentCredits  =   findViewById(R.id.paymentCredits);
 
         amountButton    =   findViewById(R.id.amountButton);
         routeButton     =   findViewById(R.id.routeButton);
@@ -89,15 +91,13 @@ public class ShowDataLoan extends AppCompatActivity {
         loans = dbLoans.showLoan(id);
         client = dbClients.showClient(loans.getIdClient());
 
-        saldo = Integer.parseInt(loans.getLoan());
-
         for(int i = 0; i < dbPayments.showPayments().size(); i++){
             if(loans.getId() == dbPayments.showPayments().get(i).getIdLoans()){
-                saldo-=dbPayments.showPayments().get(i).getAmount();
+                saldo+=dbPayments.showPayments().get(i).getAmount();
             }
         }
-        Toast.makeText(ShowDataLoan.this, saldo+"", Toast.LENGTH_SHORT).show();
-        balanceFaulty.setText(saldo+"");
+        paymentCredits.setText(saldo+"");
+        balanceFaulty.setText(Integer.parseInt(loans.getLoan())-saldo+"");
 
 
         if (loans != null) {
@@ -176,17 +176,14 @@ public class ShowDataLoan extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 addPayment();
-                saldo = Integer.parseInt(loans.getLoan());
-
-
-
+                saldo = 0;
                 for(int i = 0; i < dbPayments.showPayments().size(); i++){
                     if(loans.getId() == dbPayments.showPayments().get(i).getIdLoans()){
-                        saldo-=dbPayments.showPayments().get(i).getAmount();
+                        saldo+=dbPayments.showPayments().get(i).getAmount();
                     }
                 }
-                Toast.makeText(ShowDataLoan.this, saldo+"", Toast.LENGTH_SHORT).show();
-                balanceFaulty.setText(saldo+"");
+                paymentCredits.setText(saldo+"");
+                balanceFaulty.setText(Integer.parseInt(loans.getLoan())-saldo+"");
             }
         });
 

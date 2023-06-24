@@ -18,12 +18,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.deam.gota.R;
 import com.deam.gota.adapters.ListLoanAdapter;
 import com.deam.gota.dataBases.DbClients;
 import com.deam.gota.dataBases.DbLoans;
+import com.deam.gota.dataBases.DbPayments;
 import com.deam.gota.model.clients.AddClient;
 import com.deam.gota.model.clients.ShowClients;
 import com.deam.gota.model.loans.ShowClientToLoan;
@@ -32,6 +34,7 @@ import com.deam.gota.pojos.Loans;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
@@ -43,6 +46,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private ArrayList<Loans> listLoans;
     private SwipeRefreshLayout swipeRefreshLayout;
     ListLoanAdapter adapter;
+    private DbLoans dbLoans;
+    private TextView total;
 
     public MainActivity(){
     }
@@ -54,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         swipeRefreshLayout = findViewById(R.id.refresh);
 
-
+        total = findViewById(R.id.total);
 
         fabAddClient = findViewById(R.id.fabAddClient);
         fabAddLoan = findViewById(R.id.fabAddLoan);
@@ -67,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         loans.setLayoutManager(new LinearLayoutManager(this));
 
-        DbLoans dbLoans = new DbLoans(MainActivity.this);
+        dbLoans = new DbLoans(MainActivity.this);
         DbClients dbClients = new DbClients(MainActivity.this);
 
         listLoans = new ArrayList<>();
@@ -75,6 +80,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         adapter = new ListLoanAdapter(dbLoans.showLoans(), dbClients.showClients());
 
         loans.setAdapter(adapter);
+
+        TotalPaymentsDay();
 
         fabAddClient.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,6 +117,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 ListLoanAdapter adapter = new ListLoanAdapter(dbLoans.showLoans(), dbClients.showClients());
 
                 loans.setAdapter(adapter);
+                TotalPaymentsDay();
 
             }
         });
@@ -131,7 +139,21 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     }
 
-    public void reset(){
+    public void TotalPaymentsDay(){
+        int totalI = 0;
+        DbPayments dbPayments = new DbPayments(this);
+        Calendar calendar = Calendar.getInstance();
+        int anio = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH)+1;
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        String fecha = day + "/" + month + "/" + anio;
+        for (int i = 0; i < dbPayments.showPayments().size(); i++) {
+            if(fecha.equals(dbPayments.showPayments().get(i).getDate())){
+                totalI+=dbPayments.showPayments().get(i).getAmount();
+            }
+        }
+
+        total.setText(totalI+"");
 
     }
 
