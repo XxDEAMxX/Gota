@@ -29,6 +29,7 @@ import com.deam.gota.dataBases.DbPayments;
 import com.deam.gota.model.clients.AddClient;
 import com.deam.gota.model.clients.ShowClients;
 import com.deam.gota.model.expenses.Expenses;
+import com.deam.gota.model.expenses.ShowExpenses;
 import com.deam.gota.model.loans.ShowClientToLoan;
 import com.deam.gota.model.loans.ShowLoans;
 import com.deam.gota.pojos.Loans;
@@ -131,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         fabExpenses.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, Expenses.class);
+                Intent intent = new Intent(MainActivity.this, ShowExpenses.class);
                 startActivity(intent);
             }
         });
