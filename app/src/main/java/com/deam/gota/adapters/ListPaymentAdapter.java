@@ -1,5 +1,7 @@
 package com.deam.gota.adapters;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.deam.gota.R;
+import com.deam.gota.model.loans.EditPayment;
 
 import java.util.ArrayList;
 
@@ -42,16 +45,16 @@ public class ListPaymentAdapter extends RecyclerView.Adapter<ListPaymentAdapter.
             date = itemView.findViewById(R.id.dateText);
             amount = itemView.findViewById(R.id.amountEditText);
 
-            /*itemView.setOnClickListener(new View.OnClickListener() {
+            itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Context context = v.getContext();
-                    Intent intent = new Intent(context, ShowDataLoan.class);
-                    //intent.putExtra("ID", listLoans.get(getAdapterPosition()).getId());
+                    Intent intent = new Intent(context, EditPayment.class);
+                    intent.putExtra("ID", listPayments.get(getAdapterPosition()).getId());
                     context.startActivity(intent);
 
                 }
-            });*/
+            });
         }
 
     }

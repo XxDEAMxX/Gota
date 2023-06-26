@@ -94,7 +94,7 @@ public class DbPayments extends SQLOHelperPayments {
         return payments;
     }
 
-    public boolean editPayments(int id, String date, String quotas, String loan){
+    public boolean editPayments(int id, String date, int amount){
         boolean correct = false;
 
         SQLOHelperLoans sqloHelperLoans = new SQLOHelperLoans(context);
@@ -102,8 +102,8 @@ public class DbPayments extends SQLOHelperPayments {
 
         try {
             db.execSQL("UPDATE " + TABLA_PAYMENTS + " SET date = '" + date + "', " +
-                    "quotas = '" + quotas + "', " +
-                    "loan = '" + loan + "'");
+                    "amount = '" + amount + "', " +
+                    "date = '" + date + "' WHERE id = '" + id + "'");
             correct = true;
 
         }catch (Exception e){
