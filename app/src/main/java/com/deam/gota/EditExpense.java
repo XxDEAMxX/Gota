@@ -1,4 +1,4 @@
-package com.deam.gota.model.loans;
+package com.deam.gota;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,27 +10,27 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.deam.gota.R;
-import com.deam.gota.dataBases.DbPayments;
-import com.deam.gota.pojos.Payments;
+import com.deam.gota.dataBases.DbExpenses;
+import com.deam.gota.pojos.Expenses;
 
 import java.util.Calendar;
 
-public class EditPayment extends AppCompatActivity {
+public class EditExpense extends AppCompatActivity {
 
-    private EditText amount, date;
+    private EditText amount, date, comment;
     private Button edit;
     private int id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_payment);
+        setContentView(R.layout.activity_edit_expense);
 
-        amount = findViewById(R.id.amountEdit);
-        date = findViewById(R.id.dateEdit);
+        amount = findViewById(R.id.amountEditExpense);
+        date = findViewById(R.id.dateEditExpense);
+        comment = findViewById(R.id.commentEditExpense);
 
-        edit = findViewById(R.id.editButton);
+        edit = findViewById(R.id.editButtonExpense);
 
 
         if (savedInstanceState == null) {
@@ -44,11 +44,13 @@ public class EditPayment extends AppCompatActivity {
             id = (int) savedInstanceState.getSerializable("ID");
         }
 
-        DbPayments dbPayments = new DbPayments(EditPayment.this);
-        Payments payments = dbPayments.showPayment(id);
+        DbExpenses dbExpenses = new DbExpenses(this);
+        Expenses expenses = dbExpenses.showExpense(id);
 
-        amount.setText(payments.getAmount());
-        date.setText(payments.getDate());
+
+        amount.setText(expenses.getExpense());
+        date.setText(expenses.getDate());
+        comment.setText(expenses.getComent());
 
         date.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,7 +60,7 @@ public class EditPayment extends AppCompatActivity {
                 int month = calendar.get(Calendar.MONTH)+1;
                 int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-                DatePickerDialog datePickerDialog = new DatePickerDialog(EditPayment.this, new DatePickerDialog.OnDateSetListener() {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(EditExpense.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         String fecha = dayOfMonth + "/" + month + "/" + year;
@@ -72,20 +74,24 @@ public class EditPayment extends AppCompatActivity {
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!date.getText().toString().isEmpty() && !amount.getText().toString().isEmpty()) {
-                    boolean correct = dbPayments.editPayments(id, date.getText().toString(),
-                            Integer.parseInt(amount.getText().toString()));
-                    if (correct){
-                        Toast.makeText(EditPayment.this, "REGISTRO EDITADO", Toast.LENGTH_SHORT).show();
+                if(!amount.getText().toString().isEmpty() && !date.getText().toString().isEmpty()
+                        && !comment.getText().toString().isEmpty()){
+                    boolean correct = dbExpenses.editExpense(id, Integer.parseInt(amount.getText().toString()),
+                            date.getText().toString(), comment.getText().toString());
+
+                    if(correct){
+                        Toast.makeText(EditExpense.this, "REGISTRO EDITADO", Toast.LENGTH_SHORT).show();
+                        finish();
                     }else {
-                        Toast.makeText(EditPayment.this, "ERROR AL EDITAR EL REGISTRO", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EditExpense.this, "ERROR AL GUARDAR REGISTRO", Toast.LENGTH_SHORT).show();
                     }
                 }else {
-                    Toast.makeText(EditPayment.this, "LLENE TODOS LOS ESPACIOS", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditExpense.this, "LLENE TODO LOS ESPACIOS", Toast.LENGTH_SHORT).show();
                 }
-
             }
         });
+
+
 
     }
 }

@@ -19,6 +19,9 @@
         android:theme="@style/Theme.Gota"
         tools:targetApi="31">
         <activity
+            android:name=".EditExpense"
+            android:exported="false" />
+        <activity
             android:name=".model.loans.EditPayment"
             android:exported="false" />
         <activity
