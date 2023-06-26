@@ -1,4 +1,4 @@
-package com.deam.gota;
+package com.deam.gota.model.expenses;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,6 +10,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.deam.gota.R;
 import com.deam.gota.dataBases.DbExpenses;
 import com.deam.gota.pojos.Expenses;
 
@@ -48,7 +49,7 @@ public class EditExpense extends AppCompatActivity {
         Expenses expenses = dbExpenses.showExpense(id);
 
 
-        amount.setText(expenses.getExpense());
+        amount.setText(expenses.getExpense()+"");
         date.setText(expenses.getDate());
         comment.setText(expenses.getComent());
 

@@ -47,7 +47,7 @@ public class EditPayment extends AppCompatActivity {
         DbPayments dbPayments = new DbPayments(EditPayment.this);
         Payments payments = dbPayments.showPayment(id);
 
-        amount.setText(payments.getAmount());
+        amount.setText(payments.getAmount()+"");
         date.setText(payments.getDate());
 
         date.setOnClickListener(new View.OnClickListener() {

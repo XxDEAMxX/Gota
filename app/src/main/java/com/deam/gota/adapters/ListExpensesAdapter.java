@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.deam.gota.R;
 import com.deam.gota.model.clients.ShowClients;
 import com.deam.gota.model.clients.ShowDataClient;
+import com.deam.gota.model.expenses.EditExpense;
 import com.deam.gota.pojos.Clients;
 import com.deam.gota.pojos.Expenses;
 
@@ -60,7 +61,7 @@ public class ListExpensesAdapter extends RecyclerView.Adapter<ListExpensesAdapte
                 @Override
                 public void onClick(View v) {
                     Context context = v.getContext();
-                    Intent intent = new Intent(context, ShowDataClient.class);
+                    Intent intent = new Intent(context, EditExpense.class);
                     intent.putExtra("ID", listExpenses.get(getAdapterPosition()).getId());
                     context.startActivity(intent);
 
