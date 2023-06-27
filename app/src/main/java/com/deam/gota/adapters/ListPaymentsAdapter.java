@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.deam.gota.R;
 import com.deam.gota.model.loans.EditPayment;
+import com.deam.gota.model.loans.ShowPaymentsDay;
 
 import java.util.ArrayList;
 
@@ -49,7 +50,7 @@ public class ListPaymentsAdapter extends RecyclerView.Adapter<ListPaymentsAdapte
                 @Override
                 public void onClick(View v) {
                     Context context = v.getContext();
-                    Intent intent = new Intent(context, EditPayment.class);
+                    Intent intent = new Intent(context, ShowPaymentsDay.class);
                     intent.putExtra("ID", listPayments.get(getAdapterPosition()).getDate());
                     context.startActivity(intent);
 

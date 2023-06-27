@@ -7,8 +7,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 
 import com.deam.gota.R;
+import com.deam.gota.adapters.ListPayDayAdapter;
 import com.deam.gota.adapters.ListPaymentsAdapter;
+import com.deam.gota.dataBases.DbClients;
+import com.deam.gota.dataBases.DbLoans;
 import com.deam.gota.dataBases.DbPayments;
+import com.deam.gota.pojos.PayDay;
 import com.deam.gota.pojos.Payments;
 
 import java.util.ArrayList;
@@ -16,7 +20,7 @@ import java.util.ArrayList;
 public class ShowPaymentsDay extends AppCompatActivity {
 
     private RecyclerView list;
-    private ArrayList<Payments> listPayments;
+    private ArrayList<PayDay> listPayments;
     String id;
 
     @Override
@@ -41,11 +45,20 @@ public class ShowPaymentsDay extends AppCompatActivity {
             id = savedInstanceState.getString("ID");
         }
 
-        DbPayments dbPayments = new DbPayments(ShowPaymentsDay.this);
+        DbPayments dbPayments = new DbPayments(this);
+        DbLoans dbLoans = new DbLoans(this);
+        DbClients dbClients = new DbClients(this);
+
+        for (Payments pay: dbPayments.showPayments()) {
+            if(pay.getDate().equals(id)){
+                listPayments.add(new PayDay(pay.getAmount(),
+                        dbClients.showClient(dbLoans.showLoan(pay.getIdLoans()).getIdClient()).getName(),
+                        dbClients.showClient(dbLoans.showLoan(pay.getIdLoans()).getIdClient()).getPhoneNumber()));
+            }
+        }
 
 
-
-        ListPaymentsAdapter adapter = new ListPaymentsAdapter(listPayments);
+        ListPayDayAdapter adapter = new ListPayDayAdapter(listPayments);
 
         list.setAdapter(adapter);
 
