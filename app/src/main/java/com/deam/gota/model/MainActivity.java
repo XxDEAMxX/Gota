@@ -1,6 +1,5 @@
 package com.deam.gota.model;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -12,44 +11,34 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.SearchView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.deam.gota.R;
+import com.deam.gota.model.loans.ShowPayments;
 import com.deam.gota.adapters.ListLoanAdapter;
 import com.deam.gota.dataBases.DbClients;
 import com.deam.gota.dataBases.DbLoans;
-import com.deam.gota.dataBases.DbPayments;
-import com.deam.gota.model.clients.AddClient;
 import com.deam.gota.model.clients.ShowClients;
-import com.deam.gota.model.expenses.Expenses;
 import com.deam.gota.model.expenses.ShowExpenses;
 import com.deam.gota.model.loans.ShowClientToLoan;
-import com.deam.gota.model.loans.ShowLoans;
 import com.deam.gota.pojos.Loans;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     private int REQUEST_CODE = 200;
 
-    private FloatingActionButton fabAddLoan, fabShowClients, fabReset, fabExpenses;
+    private FloatingActionButton fabAddLoan, fabShowClients, fabReset, fabExpenses, fabShowPaymentsDay;
     private SearchView search;
     private RecyclerView loans;
     private ArrayList<Loans> listLoans;
     private SwipeRefreshLayout swipeRefreshLayout;
     ListLoanAdapter adapter;
     private DbLoans dbLoans;
-    private TextView total;
 
     public MainActivity(){
     }
@@ -61,16 +50,22 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         swipeRefreshLayout = findViewById(R.id.refresh);
 
-        total = findViewById(R.id.total);
-
         fabAddLoan = findViewById(R.id.fabAddLoan);
         fabShowClients = findViewById(R.id.fabShowClients);
         fabReset = findViewById(R.id.reset);
         fabExpenses = findViewById(R.id.fabExpenses);
+        fabShowPaymentsDay = findViewById(R.id.fabShowPaymentsDay);
 
         search  = findViewById(R.id.searchLoan);
         loans = findViewById(R.id.list);
 
+        fabShowPaymentsDay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ShowPayments.class);
+                startActivity(intent);
+            }
+        });
 
         loans.setLayoutManager(new LinearLayoutManager(this));
 
@@ -83,7 +78,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         loans.setAdapter(adapter);
 
-        TotalPaymentsDay();
 
         fabAddLoan.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,8 +103,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 ListLoanAdapter adapter = new ListLoanAdapter(dbLoans.showLoans(), dbClients.showClients());
 
                 loans.setAdapter(adapter);
-                TotalPaymentsDay();
-
             }
         });
 
@@ -136,25 +128,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 startActivity(intent);
             }
         });
-
-    }
-
-
-    public void TotalPaymentsDay(){
-        int totalI = 0;
-        DbPayments dbPayments = new DbPayments(this);
-        Calendar calendar = Calendar.getInstance();
-        int anio = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH)+1;
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        String fecha = day + "/" + month + "/" + anio;
-        for (int i = 0; i < dbPayments.showPayments().size(); i++) {
-            if(fecha.equals(dbPayments.showPayments().get(i).getDate())){
-                totalI+=dbPayments.showPayments().get(i).getAmount();
-            }
-        }
-
-        total.setText(totalI+"");
 
     }
 

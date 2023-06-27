@@ -129,7 +129,7 @@ public class DbLoans extends SQLOHelperLoans {
         SQLiteDatabase db = sqloHelperLoans.getWritableDatabase();
 
         try {
-            db.execSQL("UPDATE " + TABLA_LOANS + " SET route = '" + showLoans().size() + "'");
+            db.execSQL("UPDATE " + TABLA_LOANS + " SET route = '" + 1000 + "'");
             correct = true;
 
         }catch (Exception e){

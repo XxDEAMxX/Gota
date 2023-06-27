@@ -110,20 +110,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/restart" />
 
-    <TextView
-        android:id="@+id/total"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
-        android:text="TextView"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/refresh"
-        app:layout_constraintEnd_toStartOf="@+id/fabShowClients"
-        app:layout_constraintStart_toEndOf="@+id/reset" />
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabExpenses"
         android:layout_width="wrap_content"
@@ -135,6 +121,18 @@
         app:layout_constraintBottom_toTopOf="@+id/fabAddLoan"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/request_quote" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabShowPaymentsDay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginBottom="30dp"
+        android:clickable="true"
+        app:backgroundTint="@color/colorButton"
+        app:layout_constraintBottom_toTopOf="@+id/reset"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/payments" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

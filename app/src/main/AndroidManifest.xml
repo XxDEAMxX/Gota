@@ -19,6 +19,12 @@
         android:theme="@style/Theme.Gota"
         tools:targetApi="31">
         <activity
+            android:name=".model.loans.ShowPaymentsDay"
+            android:exported="false" />
+        <activity
+            android:name=".model.loans.ShowPayments"
+            android:exported="false" />
+        <activity
             android:name=".model.expenses.EditExpense"
             android:exported="false" />
         <activity
