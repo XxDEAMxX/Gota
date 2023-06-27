@@ -1,8 +1,10 @@
 package com.deam.gota.model.expenses;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,14 +14,16 @@ import android.widget.Toast;
 
 import com.deam.gota.R;
 import com.deam.gota.dataBases.DbExpenses;
+import com.deam.gota.model.clients.ShowDataClient;
 import com.deam.gota.pojos.Expenses;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Calendar;
 
 public class EditExpense extends AppCompatActivity {
 
     private EditText amount, date, comment;
-    private Button edit;
+    private FloatingActionButton edit, delete;
     private int id;
 
     @Override
@@ -27,11 +31,14 @@ public class EditExpense extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_expense);
 
+
+
         amount = findViewById(R.id.amountEditExpense);
         date = findViewById(R.id.dateEditExpense);
         comment = findViewById(R.id.commentEditExpense);
 
         edit = findViewById(R.id.editButtonExpense);
+        delete = findViewById(R.id.deleteButtonExpense);
 
 
         if (savedInstanceState == null) {
@@ -92,7 +99,25 @@ public class EditExpense extends AppCompatActivity {
             }
         });
 
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(EditExpense.this);
+                builder.setMessage("¿DESEA ELIMINAR ESTE GASTO?").setPositiveButton("SI", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(dbExpenses.deleteExpense(id)){
+                            finish();
+                        }
+                    }
+                }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
 
+                    }
+                }).show();
+            }
+        });
 
     }
 }

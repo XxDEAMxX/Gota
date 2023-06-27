@@ -97,8 +97,8 @@ public class DbPayments extends SQLOHelperPayments {
     public boolean editPayments(int id, String date, int amount){
         boolean correct = false;
 
-        SQLOHelperLoans sqloHelperLoans = new SQLOHelperLoans(context);
-        SQLiteDatabase db = sqloHelperLoans.getWritableDatabase();
+        SQLOHelperPayments sqloHelperPayments = new SQLOHelperPayments(context);
+        SQLiteDatabase db = sqloHelperPayments.getWritableDatabase();
 
         try {
             db.execSQL("UPDATE " + TABLA_PAYMENTS + " SET date = '" + date + "', " +
@@ -118,8 +118,8 @@ public class DbPayments extends SQLOHelperPayments {
     public boolean deletePayment(int id){
         boolean correct = false;
 
-        SQLOHelperLoans sqloHelperLoans = new SQLOHelperLoans(context);
-        SQLiteDatabase db = sqloHelperLoans.getWritableDatabase();
+        SQLOHelperPayments sqloHelperPayments = new SQLOHelperPayments(context);
+        SQLiteDatabase db = sqloHelperPayments.getWritableDatabase();
 
         try {
             db.execSQL("DELETE FROM " + TABLA_PAYMENTS + " WHERE id = '" + id + "'");

@@ -1,8 +1,10 @@
 package com.deam.gota.model.loans;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,14 +14,16 @@ import android.widget.Toast;
 
 import com.deam.gota.R;
 import com.deam.gota.dataBases.DbPayments;
+import com.deam.gota.model.expenses.EditExpense;
 import com.deam.gota.pojos.Payments;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Calendar;
 
 public class EditPayment extends AppCompatActivity {
 
     private EditText amount, date;
-    private Button edit;
+    private FloatingActionButton edit, delete;
     private int id;
 
     @Override
@@ -31,6 +35,7 @@ public class EditPayment extends AppCompatActivity {
         date = findViewById(R.id.dateEdit);
 
         edit = findViewById(R.id.editButton);
+        delete = findViewById(R.id.deleteButtonPayment);
 
 
         if (savedInstanceState == null) {
@@ -77,13 +82,53 @@ public class EditPayment extends AppCompatActivity {
                             Integer.parseInt(amount.getText().toString()));
                     if (correct){
                         Toast.makeText(EditPayment.this, "REGISTRO EDITADO", Toast.LENGTH_SHORT).show();
+                        finish();
                     }else {
                         Toast.makeText(EditPayment.this, "ERROR AL EDITAR EL REGISTRO", Toast.LENGTH_SHORT).show();
                     }
                 }else {
                     Toast.makeText(EditPayment.this, "LLENE TODOS LOS ESPACIOS", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
 
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(EditPayment.this);
+                builder.setMessage("¿DESEA ELIMINAR ESTE PAGO?").setPositiveButton("SI", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(dbPayments.deletePayment(id)){
+                            finish();
+                        }
+                    }
+                }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                }).show();
+            }
+        });
+
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(EditPayment.this);
+                builder.setMessage("¿DESEA ELIMINAR ESTE PAGO?").setPositiveButton("SI", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(dbPayments.deletePayment(id)){
+                            finish();
+                        }
+                    }
+                }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                }).show();
             }
         });
 
