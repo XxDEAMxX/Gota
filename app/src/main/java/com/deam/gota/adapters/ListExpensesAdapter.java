@@ -61,10 +61,16 @@ public class ListExpensesAdapter extends RecyclerView.Adapter<ListExpensesAdapte
                 @Override
                 public void onClick(View v) {
                     Context context = v.getContext();
-                    Intent intent = new Intent(context, EditExpense.class);
-                    intent.putExtra("ID", listExpenses.get(getAdapterPosition()).getId());
-                    context.startActivity(intent);
+                    int position = getAdapterPosition();
 
+                    if (position != RecyclerView.NO_POSITION && position < listExpenses.size()) {
+                        Expenses expense = listExpenses.get(position);
+                        if (expense != null) {
+                            Intent intent = new Intent(context, EditExpense.class);
+                            intent.putExtra("ID", expense.getId());
+                            context.startActivity(intent);
+                        }
+                    }
                 }
             });
         }

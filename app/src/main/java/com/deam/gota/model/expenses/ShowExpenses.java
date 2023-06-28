@@ -41,7 +41,6 @@ public class ShowExpenses extends AppCompatActivity {
 
 
         dbExpenses = new DbExpenses(ShowExpenses.this);
-        Toast.makeText(this, dbExpenses.showExpenses().get(0).getExpense()+"", Toast.LENGTH_SHORT).show();
 
         ListExpensesAdapter adapter = new ListExpensesAdapter(dbExpenses.showExpenses());
 
