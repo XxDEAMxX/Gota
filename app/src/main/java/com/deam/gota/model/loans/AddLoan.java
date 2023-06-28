@@ -102,13 +102,14 @@ public class AddLoan extends AppCompatActivity {
 
         Calendar calendar = Calendar.getInstance();
         int anio = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH)+1;
+        int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                String fecha = dayOfMonth + "/" + month + "/" + year;
+                int monthCorrect = month+1;
+                String fecha = dayOfMonth + "/" + monthCorrect + "/" + year;
                 date.setText(fecha);
             }
         }, anio, month, day);
@@ -119,7 +120,8 @@ public class AddLoan extends AppCompatActivity {
 
         String dateS = date.getText().toString();
         String quotasS = quotas.getText().toString();
-        String loanS = loan.getText().toString();
+        Double loanT = (Integer.parseInt(loan.getText().toString())*0.2)+Integer.parseInt(loan.getText().toString());
+        String loanS = loanT+"";
 
         if (!dateS.isEmpty() && !quotasS.isEmpty() && !loanS.isEmpty()) {
 

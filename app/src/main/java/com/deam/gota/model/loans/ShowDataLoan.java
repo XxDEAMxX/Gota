@@ -96,7 +96,7 @@ public class ShowDataLoan extends AppCompatActivity {
             }
         }
         paymentCredits.setText(saldo+"");
-        balanceFaulty.setText(Integer.parseInt(loans.getLoan())-saldo+"");
+        balanceFaulty.setText(Double.parseDouble(loans.getLoan())-saldo+"");
 
 
         if (loans != null) {
@@ -187,7 +187,7 @@ public class ShowDataLoan extends AppCompatActivity {
                     }
                 }
                 paymentCredits.setText(saldo+"");
-                balanceFaulty.setText(Integer.parseInt(loans.getLoan())-saldo+"");
+                balanceFaulty.setText(Double.parseDouble(loans.getLoan())-saldo+"");
             }
         });
 
