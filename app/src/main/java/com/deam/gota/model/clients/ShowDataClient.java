@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.deam.gota.R;
 import com.deam.gota.dataBases.DbClients;
+import com.deam.gota.dataBases.DbLoans;
 import com.deam.gota.pojos.Clients;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -31,6 +32,7 @@ public class ShowDataClient extends AppCompatActivity {
 
     private Clients clients;
     private int id;
+    boolean exist = false;
 
 
     @Override
@@ -85,24 +87,38 @@ public class ShowDataClient extends AppCompatActivity {
             }
         });
 
+        DbLoans dbLoans = new DbLoans(this);
+
+
+
+        for(int i = 0; i < dbLoans.showLoans().size(); i++){
+            if(clients.getId() == dbLoans.showLoans().get(i).getIdClient()){
+                exist = true;
+            }
+        }
+
         fabDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(ShowDataClient.this);
-                builder.setMessage("¿DESEA ELIMINAR ESTE CLIENTE?").setPositiveButton("SI", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if(dbClients.deleteClient(clients.getId())){
-                            intentShow();
-                            finish();
+                if (!exist) {
+                    builder.setMessage("¿DESEA ELIMINAR ESTE CLIENTE?").setPositiveButton("SI", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (dbClients.deleteClient(clients.getId())) {
+                                intentShow();
+                                finish();
+                            }
                         }
-                    }
-                }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
 
-                    }
-                }).show();
+                        }
+                    }).show();
+                }else {
+                    Toast.makeText(ShowDataClient.this, "CLIENTE YA TIENE PRESTAMOS REGISTRADOS", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

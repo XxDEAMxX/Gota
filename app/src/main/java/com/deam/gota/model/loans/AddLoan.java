@@ -124,7 +124,7 @@ public class AddLoan extends AppCompatActivity {
         if (!dateS.isEmpty() && !quotasS.isEmpty() && !loanS.isEmpty()) {
 
             DbLoans dbLoans = new DbLoans(this);
-            long id = dbLoans.insertLoan(clients.getId(), dbLoans.showLoans().size()+1, dateS, quotasS,loanS);
+            long id = dbLoans.insertLoan(clients.getId(), 1000, dateS, quotasS,loanS);
 
             if (id > 0) {
                 Toast.makeText(this, "REGISTRO GUARDADO", Toast.LENGTH_SHORT).show();

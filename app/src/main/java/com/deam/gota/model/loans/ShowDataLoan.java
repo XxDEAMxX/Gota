@@ -47,6 +47,7 @@ public class ShowDataLoan extends AppCompatActivity {
     private int id;
     private boolean correct = false;
     private int saldo;
+    private boolean exist = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,28 +134,32 @@ public class ShowDataLoan extends AppCompatActivity {
             }
         });
 
+        for (int i = 0; i < dbPayments.showPayments().size(); i++){
+            if(loans.getId() == dbPayments.showPayments().get(i).getIdLoans()){
+                exist = true;
+            }
+        }
+
         fabDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(ShowDataLoan.this);
-                builder.setMessage("¿DESEA ELIMINAR ESTE CLIENTE?").setPositiveButton("SI", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if(dbLoans.deleteClient(loans.getId())){
-                            for(int i = 0; i < dbPayments.showPayments().size(); i++) {
-                                if(loans.getId() == dbPayments.showPayments().get(i).getIdLoans()) {
-                                    dbPayments.deletePayment(dbPayments.showPayments().get(i).getId());
-                                }
-                            }
+                if (!exist) {
+                    builder.setMessage("¿DESEA ELIMINAR ESTE CLIENTE?").setPositiveButton("SI", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dbLoans.deleteClient(loans.getId());
                             finish();
                         }
-                    }
-                }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
 
-                    }
-                }).show();
+                        }
+                    }).show();
+                }else {
+                    Toast.makeText(ShowDataLoan.this, "PRESTAMO CON PAGOS REGISTRADOS", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -176,6 +181,7 @@ public class ShowDataLoan extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 addPayment();
+                exist = true;
                 saldo = 0;
                 for(int i = 0; i < dbPayments.showPayments().size(); i++){
                     if(loans.getId() == dbPayments.showPayments().get(i).getIdLoans()){
