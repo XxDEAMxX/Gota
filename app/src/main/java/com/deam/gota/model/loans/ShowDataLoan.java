@@ -20,8 +20,6 @@ import com.deam.gota.R;
 import com.deam.gota.dataBases.DbClients;
 import com.deam.gota.dataBases.DbLoans;
 import com.deam.gota.dataBases.DbPayments;
-import com.deam.gota.model.clients.EditClient;
-import com.deam.gota.model.clients.ShowClients;
 import com.deam.gota.pojos.Clients;
 import com.deam.gota.pojos.Loans;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -127,7 +125,7 @@ public class ShowDataLoan extends AppCompatActivity {
         fabEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ShowDataLoan.this, EditClient.class);
+                Intent intent = new Intent(ShowDataLoan.this, EditLoan.class);
                 intent.putExtra("ID", id);
                 startActivity(intent);
                 finish();
