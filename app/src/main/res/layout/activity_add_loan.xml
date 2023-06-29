@@ -96,7 +96,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:ems="10"
-        android:hint="PROXIMO PAGO"
+        android:hint="FECHA DEL PRESTAMO"
         android:inputType="date"
         android:textColorHint="@color/colorHint"
         android:textSize="24sp"

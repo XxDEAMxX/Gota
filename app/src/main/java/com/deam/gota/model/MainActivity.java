@@ -16,6 +16,8 @@ import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.deam.gota.R;
+import com.deam.gota.dataBases.DbPayments;
+import com.deam.gota.model.loans.ShowLoansPayDay;
 import com.deam.gota.model.loans.ShowPayments;
 import com.deam.gota.adapters.ListLoanAdapter;
 import com.deam.gota.dataBases.DbClients;
@@ -27,18 +29,21 @@ import com.deam.gota.pojos.Loans;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     private int REQUEST_CODE = 200;
 
-    private FloatingActionButton fabAddLoan, fabShowClients, fabReset, fabExpenses, fabShowPaymentsDay;
+    private FloatingActionButton fabAddLoan, fabShowClients, fabReset, fabExpenses, fabShowPaymentsDay, fabPayDay;
     private SearchView search;
     private RecyclerView loans;
     private ArrayList<Loans> listLoans;
     private SwipeRefreshLayout swipeRefreshLayout;
     ListLoanAdapter adapter;
     private DbLoans dbLoans;
+    private DbClients dbClients;
+    private DbPayments dbPayments;
 
     public MainActivity(){
     }
@@ -55,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         fabReset = findViewById(R.id.reset);
         fabExpenses = findViewById(R.id.fabExpenses);
         fabShowPaymentsDay = findViewById(R.id.fabShowPaymentsDay);
+        fabPayDay = findViewById(R.id.fabPayDay);
 
         search  = findViewById(R.id.searchLoan);
         loans = findViewById(R.id.list);
@@ -69,12 +75,38 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         loans.setLayoutManager(new LinearLayoutManager(this));
 
-        dbLoans = new DbLoans(MainActivity.this);
-        DbClients dbClients = new DbClients(MainActivity.this);
+        dbLoans = new DbLoans(this);
+        dbClients = new DbClients(this);
+        dbPayments = new DbPayments(this);
 
         listLoans = new ArrayList<>();
-        dbLoans.showLoans().size();
-        adapter = new ListLoanAdapter(dbLoans.showLoans(), dbClients.showClients());
+
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        String fecha = day + "/" + month + "/" + year;
+
+        Toast.makeText(MainActivity.this, fecha, Toast.LENGTH_SHORT).show();
+
+        for (int i = 0; i < dbLoans.showLoans().size(); i++) {
+            boolean hasPaymentOnDate = false;
+
+            for (int j = 0; j < dbPayments.showPayments().size(); j++) {
+                if (dbLoans.showLoans().get(i).getId() == dbPayments.showPayments().get(j).getIdLoans()) {
+                    if (dbPayments.showPayments().get(j).getDate().equals(fecha)) {
+                        hasPaymentOnDate = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!hasPaymentOnDate) {
+                listLoans.add(dbLoans.showLoans().get(i));
+            }
+        }
+
+        adapter = new ListLoanAdapter(listLoans, dbClients.showClients());
 
         loans.setAdapter(adapter);
 
@@ -99,8 +131,35 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 swipeRefreshLayout.setRefreshing(false);
 
                 listLoans = new ArrayList<>();
-                dbLoans.showLoans().size();
-                ListLoanAdapter adapter = new ListLoanAdapter(dbLoans.showLoans(), dbClients.showClients());
+
+                Calendar calendar = Calendar.getInstance();
+                int year = calendar.get(Calendar.YEAR);
+                int month = calendar.get(Calendar.MONTH) + 1;
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+                String fecha = day + "/" + month + "/" + year;
+
+                Toast.makeText(MainActivity.this, fecha, Toast.LENGTH_SHORT).show();
+
+                for (int i = 0; i < dbLoans.showLoans().size(); i++) {
+                    boolean hasPaymentOnDate = false;
+
+                    for (int j = 0; j < dbPayments.showPayments().size(); j++) {
+                        if (dbLoans.showLoans().get(i).getId() == dbPayments.showPayments().get(j).getIdLoans()) {
+                            if (dbPayments.showPayments().get(j).getDate().equals(fecha)) {
+                                hasPaymentOnDate = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!hasPaymentOnDate) {
+                        listLoans.add(dbLoans.showLoans().get(i));
+                    }
+                }
+
+                Toast.makeText(MainActivity.this, listLoans.size()+"", Toast.LENGTH_SHORT).show();
+
+                ListLoanAdapter adapter = new ListLoanAdapter(listLoans, dbClients.showClients());
 
                 loans.setAdapter(adapter);
             }
@@ -125,6 +184,14 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, ShowExpenses.class);
+                startActivity(intent);
+            }
+        });
+
+        fabPayDay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ShowLoansPayDay.class);
                 startActivity(intent);
             }
         });
