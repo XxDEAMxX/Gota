@@ -1,10 +1,8 @@
 package com.deam.gota.model.clients;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -12,96 +10,69 @@ import android.widget.Toast;
 import com.deam.gota.R;
 import com.deam.gota.dataBases.DbClients;
 import com.deam.gota.pojos.Clients;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class EditClient extends AppCompatActivity {
 
-    private EditText name;
-    private EditText lastName;
-    private EditText addressHome;
-    private EditText addressJob;
-    private EditText phoneNumber;
-    private Button edit;
+    private EditText nameEditText;
+    private EditText lastNameEditText;
+    private EditText addressHomeEditText;
+    private EditText addressJobEditText;
+    private EditText phoneNumberEditText;
+    private Button editButton;
 
     private Clients clients;
-    private String nameS;
-    private int id = 0;
-    private boolean correct = false;
-    private FloatingActionButton fabEdit, fabDelete;
-
+    private int clientId = 0;
+    private boolean isCorrect = false;
+    private DbClients dbClients;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_client);
 
-        name        =   findViewById(R.id.showDataNameText);
-        lastName    =   findViewById(R.id.showDataLastNameText);
-        addressHome =   findViewById(R.id.showDataAddressHomeText);
-        addressJob  =   findViewById(R.id.showDataAddressJobText);
-        phoneNumber =   findViewById(R.id.showDataPhoneNumberText);
-        edit        =   findViewById(R.id.edit);
-        //fabEdit     =   findViewById(R.id.fabEdit);
-        //fabEdit.setVisibility(View.INVISIBLE);
-        //fabDelete   =   findViewById(R.id.fabDelete);
-        //fabDelete.setVisibility(View.INVISIBLE);
+        nameEditText = findViewById(R.id.showDataNameText);
+        lastNameEditText = findViewById(R.id.showDataLastNameText);
+        addressHomeEditText = findViewById(R.id.showDataAddressHomeText);
+        addressJobEditText = findViewById(R.id.showDataAddressJobText);
+        phoneNumberEditText = findViewById(R.id.showDataPhoneNumberText);
+        editButton = findViewById(R.id.edit);
 
+        clientId = getIntent().getIntExtra("ID", 0);
+        dbClients = new DbClients(EditClient.this);
+        clients = dbClients.showClient(clientId);
 
-        if(savedInstanceState == null){
-            Bundle extras = getIntent().getExtras();
-            if(extras == null){
-                id = Integer.parseInt(null);
-            }else {
-                id = extras.getInt("ID");
-            }
-        }else {
-            id = (int) savedInstanceState.getSerializable("ID");
+        if (clients != null) {
+            nameEditText.setText(clients.getName());
+            lastNameEditText.setText(clients.getLastName());
+            addressHomeEditText.setText(clients.getAddressHome());
+            addressJobEditText.setText(clients.getAddressJob());
+            phoneNumberEditText.setText(clients.getPhoneNumber());
         }
 
-        DbClients dbClients = new DbClients(EditClient.this);
-        clients = dbClients.showClient(id);
+        editButton.setOnClickListener(v -> {
+            String name = nameEditText.getText().toString().trim();
+            String lastName = lastNameEditText.getText().toString().trim();
+            String addressHome = addressHomeEditText.getText().toString().trim();
+            String addressJob = addressJobEditText.getText().toString().trim();
+            String phoneNumber = phoneNumberEditText.getText().toString().trim();
 
-        if(clients != null){
-            name.setText(clients.getName());
-            lastName.setText(clients.getLastName());
-            addressHome.setText(clients.getAddressHome());
-            addressJob.setText(clients.getAddressJob());
-            phoneNumber.setText(clients.getPhoneNumber());
+            if (!name.isEmpty() && !lastName.isEmpty() && !addressHome.isEmpty()
+                    && !addressJob.isEmpty() && !phoneNumber.isEmpty()) {
 
-        }
+                isCorrect = dbClients.editClient(clientId, name, lastName, addressHome, addressJob, phoneNumber);
 
-        edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!name.getText().toString().equals("") &&
-                        !lastName.getText().toString().equals("") &&
-                        !addressHome.getText().toString().equals("") &&
-                        !addressJob.getText().toString().equals("") &&
-                        !phoneNumber.getText().toString().equals("")){
-                    correct = dbClients.editClient(
-                            id,
-                            name.getText().toString(),
-                            lastName.getText().toString(),
-                            addressHome.getText().toString(),
-                            addressJob.getText().toString(),
-                            phoneNumber.getText().toString());
-
-                    if(correct){
-                        Toast.makeText(EditClient.this, "REGISTRO MODIFICADO", Toast.LENGTH_SHORT).show();
-
-                        Intent intent = new Intent(EditClient.this, ShowClients.class);
-                        intent.putExtra("ID", clients.getId());
-                        startActivity(intent);
-                        finish();
-                    }else {
-                        Toast.makeText(EditClient.this, "ERROR AL MODIFICAR REGISTRO", Toast.LENGTH_SHORT).show();
-                    }
-                }else {
-                    Toast.makeText(EditClient.this, "DEBE LLENAR LOS CAMPOS", Toast.LENGTH_SHORT).show();
+                if (isCorrect) {
+                    Toast.makeText(EditClient.this, "REGISTRO MODIFICADO", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(EditClient.this, ShowClients.class);
+                    intent.putExtra("ID", clients.getId());
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Toast.makeText(EditClient.this, "ERROR AL MODIFICAR REGISTRO", Toast.LENGTH_SHORT).show();
                 }
+            } else {
+                Toast.makeText(EditClient.this, "DEBE LLENAR TODOS LOS CAMPOS", Toast.LENGTH_SHORT).show();
             }
         });
-
     }
-
 }

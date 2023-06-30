@@ -12,17 +12,17 @@ import android.widget.EditText;
 
 import com.deam.gota.R;
 import com.deam.gota.adapters.ListClientAdapter;
-import com.deam.gota.adapters.ListLoanAdapter;
 import com.deam.gota.dataBases.DbClients;
 import com.deam.gota.pojos.Clients;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ShowClients extends AppCompatActivity {
 
-    private EditText search;
-    private RecyclerView clients;
+    private EditText searchEditText;
+    private RecyclerView clientsRecyclerView;
     private FloatingActionButton fabAddClient;
     private ArrayList<Clients> listClients;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -33,19 +33,15 @@ public class ShowClients extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_clients);
 
-        search  = findViewById(R.id.searchClientToEdit);
-        clients = findViewById(R.id.list);
-
+        searchEditText = findViewById(R.id.searchClientToEdit);
+        clientsRecyclerView = findViewById(R.id.list);
         fabAddClient = findViewById(R.id.fabAddClient);
-
-        clients.setLayoutManager(new LinearLayoutManager(this));
+        clientsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         swipeRefreshLayout = findViewById(R.id.refresh);
-
         dbClients = new DbClients(ShowClients.this);
 
-
-       updateList();
+        updateList();
 
         fabAddClient.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,7 +58,6 @@ public class ShowClients extends AppCompatActivity {
                 updateList();
             }
         });
-
     }
 
     @Override
@@ -71,13 +66,9 @@ public class ShowClients extends AppCompatActivity {
         updateList();
     }
 
-    public void updateList(){
-        listClients = new ArrayList<>();
-        ListClientAdapter adapter = new ListClientAdapter(dbClients.showClients());
-
-        clients.setAdapter(adapter);
+    public void updateList() {
+        listClients = dbClients.showClients();
+        ListClientAdapter adapter = new ListClientAdapter(listClients);
+        clientsRecyclerView.setAdapter(adapter);
     }
-
-
-
 }
