@@ -8,18 +8,11 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import com.deam.gota.R;
-import com.deam.gota.adapters.ListClientAdapter;
 import com.deam.gota.adapters.ListExpensesAdapter;
-import com.deam.gota.dataBases.DbClients;
 import com.deam.gota.dataBases.DbExpenses;
-import com.deam.gota.model.clients.AddClient;
-import com.deam.gota.model.clients.ShowClients;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import java.util.ArrayList;
 
 public class ShowExpenses extends AppCompatActivity {
 
@@ -38,43 +31,35 @@ public class ShowExpenses extends AppCompatActivity {
         refresh = findViewById(R.id.refresh);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-
-        dbExpenses = new DbExpenses(ShowExpenses.this);
+        dbExpenses = new DbExpenses(this);
 
         ListExpensesAdapter adapter = new ListExpensesAdapter(dbExpenses.showExpenses());
-
         recyclerView.setAdapter(adapter);
 
         fabAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                add();
+                addExpense();
             }
         });
 
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                refresh.setRefreshing(false);
                 setRefresh();
-
             }
         });
-
     }
 
-    public void add(){
-        Intent intent = new Intent(ShowExpenses.this, Expenses.class);
+    private void addExpense() {
+        Intent intent = new Intent(this, Expenses.class);
         startActivity(intent);
     }
 
-    public void setRefresh(){
-
-
+    private void setRefresh() {
         ListExpensesAdapter adapter = new ListExpensesAdapter(dbExpenses.showExpenses());
-
         recyclerView.setAdapter(adapter);
+        refresh.setRefreshing(false);
     }
 
     @Override
@@ -82,5 +67,4 @@ public class ShowExpenses extends AppCompatActivity {
         super.onResume();
         setRefresh();
     }
-
 }

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -12,15 +13,17 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.deam.gota.R;
-import com.deam.gota.dataBases.DbClients;
 import com.deam.gota.dataBases.DbExpenses;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class Expenses extends AppCompatActivity {
 
     private EditText amount, date, comment;
     private Button add;
+    private DbExpenses dbExpenses;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,59 +37,64 @@ public class Expenses extends AppCompatActivity {
 
         add = findViewById(R.id.addExpense);
 
+        dbExpenses = new DbExpenses(this);
+
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                add();
+                addExpense();
             }
         });
 
         date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setDate();
+                showDatePicker();
             }
         });
 
     }
 
-    public void add(){
+    private void addExpense() {
+        String amountText = amount.getText().toString().trim();
+        String dateText = date.getText().toString().trim();
+        String commentText = comment.getText().toString().trim();
 
-            if (!amount.getText().toString().isEmpty() && !date.getText().toString().isEmpty() &&
-                    !comment.getText().toString().isEmpty()) {
+        if (!TextUtils.isEmpty(amountText) && !TextUtils.isEmpty(dateText) && !TextUtils.isEmpty(commentText)) {
+            int amountValue = Integer.parseInt(amountText);
+            long id = dbExpenses.insertExpense(amountValue, dateText, commentText);
 
-                DbExpenses dbExpenses = new DbExpenses(this);
-                long id = dbExpenses.insertExpense(
-                        Integer.parseInt(amount.getText().toString()),
-                        date.getText().toString(),
-                        comment.getText().toString());
-
-                if (id > 0) {
-                    Toast.makeText(this, "REGISTRO GUARDADO", Toast.LENGTH_SHORT).show();
-                    finish();
-                } else {
-                    Toast.makeText(this, "ERROR AL GUARDAR REGISTRO ", Toast.LENGTH_SHORT).show();
-                }
+            if (id > 0) {
+                Toast.makeText(this, "REGISTRO GUARDADO", Toast.LENGTH_SHORT).show();
+                finish();
             } else {
-                Toast.makeText(this, "LLENE TODOS LOS ESPACIOS", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "ERROR AL GUARDAR REGISTRO", Toast.LENGTH_SHORT).show();
             }
+        } else {
+            Toast.makeText(this, "LLENE TODOS LOS ESPACIOS", Toast.LENGTH_SHORT).show();
         }
-
-        public void setDate(){
-            Calendar calendar = Calendar.getInstance();
-            int anio = calendar.get(Calendar.YEAR);
-            int month = calendar.get(Calendar.MONTH);
-            int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-            DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
-                @Override
-                public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                    int monthA = month+1;
-                    String fecha = dayOfMonth + "/" + monthA + "/" + year;
-                    date.setText(fecha);
-                }
-            }, anio, month, day);
-            datePickerDialog.show();
-        }
-
     }
+
+    private void showDatePicker() {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                String formattedDate = formatDate(year, month, dayOfMonth);
+                date.setText(formattedDate);
+            }
+        }, year, month, dayOfMonth);
+        datePickerDialog.show();
+    }
+
+    private String formatDate(int year, int month, int dayOfMonth) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month, dayOfMonth);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        return sdf.format(calendar.getTime());
+    }
+}
