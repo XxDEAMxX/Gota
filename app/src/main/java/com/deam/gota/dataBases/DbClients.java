@@ -4,11 +4,19 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Environment;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
 import com.deam.gota.pojos.Clients;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
 
@@ -140,5 +148,43 @@ public class DbClients extends SQLOHelperClients {
         }
         return correct;
     }
+
+    public boolean exportClientsToDB() {
+        String dbFileName = "clients_export.db";
+        File exportDir = new File(Environment.getExternalStorageDirectory(), "GotA_Export");
+        if (!exportDir.exists()) {
+            if (!exportDir.mkdirs()) {
+                // Failed to create the directory.
+                return false;
+            }
+        }
+
+        File file = new File(exportDir, dbFileName);
+        try {
+            file.createNewFile();
+            SQLiteDatabase exportDb = SQLiteDatabase.openOrCreateDatabase(file, null);
+
+            ArrayList<Clients> clientsList = showClients();
+            for (Clients client : clientsList) {
+                ContentValues contentValues = new ContentValues();
+                contentValues.put("ID", client.getId());
+                contentValues.put("Name", client.getName());
+                contentValues.put("LastName", client.getLastName());
+                contentValues.put("AddressHome", client.getAddressHome());
+                contentValues.put("AddressJob", client.getAddressJob());
+                contentValues.put("PhoneNumber", client.getPhoneNumber());
+
+                exportDb.insert(TABLA_CLIENTS, null, contentValues);
+            }
+
+            exportDb.close();
+            return true;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 
 }

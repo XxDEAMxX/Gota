@@ -11,7 +11,9 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
+import android.widget.Button;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -41,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private SwipeRefreshLayout swipeRefreshLayout;
     ListLoanAdapter adapter;
     private DbLoans dbLoans;
+    private Button example;
     private DbClients dbClients;
     private DbPayments dbPayments;
 
@@ -61,6 +64,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         fabShowPaymentsDay = findViewById(R.id.fabShowPaymentsDay);
         fabPayDay = findViewById(R.id.fabPayDay);
 
+        example = findViewById(R.id.example);
+
         search  = findViewById(R.id.searchLoan);
         loans = findViewById(R.id.list);
 
@@ -79,6 +84,17 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         dbPayments = new DbPayments(this);
 
         setAdapterList();
+
+        example.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(dbClients.exportClientsToDB()) {
+                    Toast.makeText(MainActivity.this, Environment.getExternalStorageDirectory() + "", Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(MainActivity.this, "ERROR", Toast.LENGTH_SHORT).show();
+                }
+                }
+        });
 
         fabAddLoan.setOnClickListener(new View.OnClickListener() {
             @Override
