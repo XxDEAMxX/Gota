@@ -61,6 +61,22 @@ public class ShowLoansPayDay extends AppCompatActivity implements SearchView.OnQ
         dbClients = new DbClients(this);
         dbPayments = new DbPayments(this);
 
+        getAdapterList();
+
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipeRefreshLayout.setRefreshing(false);
+                getAdapterList();
+            }
+        });
+
+        search.setOnQueryTextListener(this);
+
+    }
+
+    public void getAdapterList(){
         ArrayList<Loans> loansWithPaymentOnCurrentDate = new ArrayList<>();
 
         Calendar calendar = Calendar.getInstance();
@@ -69,63 +85,24 @@ public class ShowLoansPayDay extends AppCompatActivity implements SearchView.OnQ
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         String currentDate = day + "/" + month + "/" + year;
 
-        for (Loans loan : dbLoans.showLoans()) {
-            boolean hasPaymentOnCurrentDate = false;
+        ArrayList<Payments> paymentsOnCurrentDate = new ArrayList<>();
+        for (Payments payment : dbPayments.showPayments()) {
+            if (payment.getDate().equals(currentDate)) {
+                paymentsOnCurrentDate.add(payment);
+            }
+        }
 
-            for (Payments payment : dbPayments.showPayments()) {
-                if (payment.getIdLoans() == loan.getId() && payment.getDate().equals(currentDate)) {
-                    hasPaymentOnCurrentDate = true;
+        for (Loans loan : dbLoans.showLoans()) {
+            for (Payments payment : paymentsOnCurrentDate) {
+                if (payment.getIdLoans() == loan.getId()) {
+                    loansWithPaymentOnCurrentDate.add(loan);
                     break;
                 }
-            }
-
-            if (hasPaymentOnCurrentDate) {
-                loansWithPaymentOnCurrentDate.add(loan);
             }
         }
 
         ListLoanAdapter adapter = new ListLoanAdapter(loansWithPaymentOnCurrentDate, dbClients.showClients());
-
         loans.setAdapter(adapter);
-
-
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                swipeRefreshLayout.setRefreshing(false);
-
-
-                ArrayList<Loans> loansWithPaymentOnCurrentDate = new ArrayList<>();
-
-                Calendar calendar = Calendar.getInstance();
-                int year = calendar.get(Calendar.YEAR);
-                int month = calendar.get(Calendar.MONTH) + 1;
-                int day = calendar.get(Calendar.DAY_OF_MONTH);
-                String currentDate = day + "/" + month + "/" + year;
-
-                for (Loans loan : dbLoans.showLoans()) {
-                    boolean hasPaymentOnCurrentDate = false;
-
-                    for (Payments payment : dbPayments.showPayments()) {
-                        if (payment.getIdLoans() == loan.getId() && payment.getDate().equals(currentDate)) {
-                            hasPaymentOnCurrentDate = true;
-                            break;
-                        }
-                    }
-
-                    if (hasPaymentOnCurrentDate) {
-                        loansWithPaymentOnCurrentDate.add(loan);
-                    }
-                }
-
-                ListLoanAdapter adapter = new ListLoanAdapter(loansWithPaymentOnCurrentDate, dbClients.showClients());
-
-                loans.setAdapter(adapter);
-            }
-        });
-
-        search.setOnQueryTextListener(this);
-
     }
 
     public void verificarPermisos(){
