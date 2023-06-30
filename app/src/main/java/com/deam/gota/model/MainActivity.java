@@ -33,8 +33,6 @@ import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
-    private int REQUEST_CODE = 200;
-
     private FloatingActionButton fabAddLoan, fabShowClients, fabReset, fabExpenses, fabShowPaymentsDay, fabPayDay;
     private SearchView search;
     private RecyclerView loans;
@@ -73,45 +71,13 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             }
         });
 
-
-
         loans.setLayoutManager(new LinearLayoutManager(this));
 
         dbLoans = new DbLoans(this);
         dbClients = new DbClients(this);
         dbPayments = new DbPayments(this);
 
-        listLoans = new ArrayList<>();
-
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH) + 1;
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        String fecha = day + "/" + month + "/" + year;
-
-        Toast.makeText(MainActivity.this, fecha, Toast.LENGTH_SHORT).show();
-
-        for (int i = 0; i < dbLoans.showLoans().size(); i++) {
-            boolean hasPaymentOnDate = false;
-
-            for (int j = 0; j < dbPayments.showPayments().size(); j++) {
-                if (dbLoans.showLoans().get(i).getId() == dbPayments.showPayments().get(j).getIdLoans()) {
-                    if (dbPayments.showPayments().get(j).getDate().equals(fecha)) {
-                        hasPaymentOnDate = true;
-                        break;
-                    }
-                }
-            }
-
-            if (!hasPaymentOnDate) {
-                listLoans.add(dbLoans.showLoans().get(i));
-            }
-        }
-
-        adapter = new ListLoanAdapter(listLoans, dbClients.showClients());
-
-        loans.setAdapter(adapter);
-
+        setAdapterList();
 
         fabAddLoan.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -168,46 +134,24 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
         updateList();
     }
 
-
     public void updateList(){
-        listLoans = new ArrayList<>();
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH) + 1;
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        String fecha = day + "/" + month + "/" + year;
-        for (int i = 0; i < dbLoans.showLoans().size(); i++) {
-            boolean hasPaymentOnDate = false;
-            for (int j = 0; j < dbPayments.showPayments().size(); j++) {
-                if (dbLoans.showLoans().get(i).getId() == dbPayments.showPayments().get(j).getIdLoans()) {
-                    if (dbPayments.showPayments().get(j).getDate().equals(fecha)) {
-                        hasPaymentOnDate = true;
-                        break;
-                    }
-                }
-            }
-            if (!hasPaymentOnDate) {
-                listLoans.add(dbLoans.showLoans().get(i));
-            }
-        }
-        ListLoanAdapter adapter = new ListLoanAdapter(listLoans, dbClients.showClients());
-        loans.setAdapter(adapter);
+        setAdapterList();
     }
-
 
     public void verificarPermisos(){
         int permiso = ContextCompat.checkSelfPermission(this,
                 android.Manifest.permission.CALL_PHONE);
 
         if(permiso != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CALL_PHONE},REQUEST_CODE);
+            int REQUEST_CODE = 200;
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]{Manifest.permission.CALL_PHONE}, REQUEST_CODE);
         }
     }
 
@@ -230,5 +174,34 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     public boolean onQueryTextChange(String newText) {
         adapter.filter(newText);
         return false;
+    }
+
+    public String getDate(){
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        return day + "/" + month + "/" + year;
+    }
+
+    public void setAdapterList(){
+        listLoans = new ArrayList<>();
+        String fecha = getDate();
+        for (int i = 0; i < dbLoans.showLoans().size(); i++) {
+            boolean hasPaymentOnDate = false;
+            for (int j = 0; j < dbPayments.showPayments().size(); j++) {
+                if (dbLoans.showLoans().get(i).getId() == dbPayments.showPayments().get(j).getIdLoans()) {
+                    if (dbPayments.showPayments().get(j).getDate().equals(fecha)) {
+                        hasPaymentOnDate = true;
+                        break;
+                    }
+                }
+            }
+            if (!hasPaymentOnDate) {
+                listLoans.add(dbLoans.showLoans().get(i));
+            }
+        }
+        ListLoanAdapter adapter = new ListLoanAdapter(listLoans, dbClients.showClients());
+        loans.setAdapter(adapter);
     }
 }
