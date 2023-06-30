@@ -26,6 +26,7 @@ import com.deam.gota.model.clients.ShowClients;
 import com.deam.gota.model.expenses.ShowExpenses;
 import com.deam.gota.model.loans.ShowClientToLoan;
 import com.deam.gota.pojos.Loans;
+import com.deam.gota.pojos.Payments;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -187,20 +188,22 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     public void setAdapterList(){
         listLoans = new ArrayList<>();
         String fecha = getDate();
-        for (int i = 0; i < dbLoans.showLoans().size(); i++) {
+        ArrayList<Loans> allLoans = dbLoans.showLoans();
+        ArrayList<Payments> allPayments = dbPayments.showPayments();
+
+        for (Loans loan : allLoans) {
             boolean hasPaymentOnDate = false;
-            for (int j = 0; j < dbPayments.showPayments().size(); j++) {
-                if (dbLoans.showLoans().get(i).getId() == dbPayments.showPayments().get(j).getIdLoans()) {
-                    if (dbPayments.showPayments().get(j).getDate().equals(fecha)) {
-                        hasPaymentOnDate = true;
-                        break;
-                    }
+            for (Payments payment : allPayments) {
+                if (loan.getId() == payment.getIdLoans() && payment.getDate().equals(fecha)) {
+                    hasPaymentOnDate = true;
+                    break;
                 }
             }
             if (!hasPaymentOnDate) {
-                listLoans.add(dbLoans.showLoans().get(i));
+                listLoans.add(loan);
             }
         }
+
         ListLoanAdapter adapter = new ListLoanAdapter(listLoans, dbClients.showClients());
         loans.setAdapter(adapter);
     }
