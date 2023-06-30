@@ -31,10 +31,6 @@ public class ListClientAdapter extends RecyclerView.Adapter<ListClientAdapter.Cl
         this.listClients = listClients;
     }
 
-    public void showClientsClose(ShowClients showClient){
-        this.showClients = showClients;
-    }
-
     @NonNull
     @Override
     public ListClientAdapter.ClientViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

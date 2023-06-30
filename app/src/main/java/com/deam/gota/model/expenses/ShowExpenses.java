@@ -56,6 +56,7 @@ public class ShowExpenses extends AppCompatActivity {
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                refresh.setRefreshing(false);
                 setRefresh();
 
             }
@@ -69,11 +70,17 @@ public class ShowExpenses extends AppCompatActivity {
     }
 
     public void setRefresh(){
-        refresh.setRefreshing(false);
+
 
         ListExpensesAdapter adapter = new ListExpensesAdapter(dbExpenses.showExpenses());
 
         recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setRefresh();
     }
 
 }

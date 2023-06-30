@@ -73,6 +73,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             }
         });
 
+
+
         loans.setLayoutManager(new LinearLayoutManager(this));
 
         dbLoans = new DbLoans(this);
@@ -129,39 +131,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             @Override
             public void onRefresh() {
                 swipeRefreshLayout.setRefreshing(false);
-
-                listLoans = new ArrayList<>();
-
-                Calendar calendar = Calendar.getInstance();
-                int year = calendar.get(Calendar.YEAR);
-                int month = calendar.get(Calendar.MONTH) + 1;
-                int day = calendar.get(Calendar.DAY_OF_MONTH);
-                String fecha = day + "/" + month + "/" + year;
-
-                Toast.makeText(MainActivity.this, fecha, Toast.LENGTH_SHORT).show();
-
-                for (int i = 0; i < dbLoans.showLoans().size(); i++) {
-                    boolean hasPaymentOnDate = false;
-
-                    for (int j = 0; j < dbPayments.showPayments().size(); j++) {
-                        if (dbLoans.showLoans().get(i).getId() == dbPayments.showPayments().get(j).getIdLoans()) {
-                            if (dbPayments.showPayments().get(j).getDate().equals(fecha)) {
-                                hasPaymentOnDate = true;
-                                break;
-                            }
-                        }
-                    }
-
-                    if (!hasPaymentOnDate) {
-                        listLoans.add(dbLoans.showLoans().get(i));
-                    }
-                }
-
-                Toast.makeText(MainActivity.this, listLoans.size()+"", Toast.LENGTH_SHORT).show();
-
-                ListLoanAdapter adapter = new ListLoanAdapter(listLoans, dbClients.showClients());
-
-                loans.setAdapter(adapter);
+                updateList();
             }
         });
 
@@ -197,6 +167,40 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         });
 
     }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateList();
+    }
+
+
+    public void updateList(){
+        listLoans = new ArrayList<>();
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        String fecha = day + "/" + month + "/" + year;
+        for (int i = 0; i < dbLoans.showLoans().size(); i++) {
+            boolean hasPaymentOnDate = false;
+            for (int j = 0; j < dbPayments.showPayments().size(); j++) {
+                if (dbLoans.showLoans().get(i).getId() == dbPayments.showPayments().get(j).getIdLoans()) {
+                    if (dbPayments.showPayments().get(j).getDate().equals(fecha)) {
+                        hasPaymentOnDate = true;
+                        break;
+                    }
+                }
+            }
+            if (!hasPaymentOnDate) {
+                listLoans.add(dbLoans.showLoans().get(i));
+            }
+        }
+        ListLoanAdapter adapter = new ListLoanAdapter(listLoans, dbClients.showClients());
+        loans.setAdapter(adapter);
+    }
+
 
     public void verificarPermisos(){
         int permiso = ContextCompat.checkSelfPermission(this,

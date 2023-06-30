@@ -26,6 +26,7 @@ public class ShowClients extends AppCompatActivity {
     private FloatingActionButton fabAddClient;
     private ArrayList<Clients> listClients;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private DbClients dbClients;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,13 +42,10 @@ public class ShowClients extends AppCompatActivity {
 
         swipeRefreshLayout = findViewById(R.id.refresh);
 
-        DbClients dbClients = new DbClients(ShowClients.this);
+        dbClients = new DbClients(ShowClients.this);
 
-        listClients = new ArrayList<>();
-        ListClientAdapter adapter = new ListClientAdapter(dbClients.showClients());
-        adapter.showClientsClose(this);
 
-        clients.setAdapter(adapter);
+       updateList();
 
         fabAddClient.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,14 +59,25 @@ public class ShowClients extends AppCompatActivity {
             @Override
             public void onRefresh() {
                 swipeRefreshLayout.setRefreshing(false);
-
-                listClients = new ArrayList<>();
-                ListClientAdapter adapter = new ListClientAdapter(dbClients.showClients());
-
-                clients.setAdapter(adapter);
-
+                updateList();
             }
         });
 
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateList();
+    }
+
+    public void updateList(){
+        listClients = new ArrayList<>();
+        ListClientAdapter adapter = new ListClientAdapter(dbClients.showClients());
+
+        clients.setAdapter(adapter);
+    }
+
+
+
 }
