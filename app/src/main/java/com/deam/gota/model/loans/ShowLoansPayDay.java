@@ -51,7 +51,7 @@ public class ShowLoansPayDay extends AppCompatActivity implements SearchView.OnQ
 
         swipeRefreshLayout = findViewById(R.id.refresh);
 
-        search  = findViewById(R.id.searchLoan);
+        search  = findViewById(R.id.searchLoanPayDay);
         loans = findViewById(R.id.list);
 
 
