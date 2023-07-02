@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.deam.gota.R;
 import com.deam.gota.dataBases.DbPayments;
+import com.deam.gota.model.loans.LoansDone;
 import com.deam.gota.model.loans.ShowDataLoan;
 import com.deam.gota.model.loans.ShowLoansPayDay;
 import com.deam.gota.model.loans.ShowPayments;
@@ -37,7 +38,7 @@ import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
-    private FloatingActionButton fabAddLoan, fabShowClients, fabReset, fabExpenses, fabShowPaymentsDay, fabPayDay;
+    private FloatingActionButton fabAddLoan, fabShowClients, fabReset, fabExpenses, fabShowPaymentsDay, fabPayDay, fabDone;
     private SearchView search;
     private RecyclerView loans;
     private ArrayList<Loans> listLoans;
@@ -63,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         fabExpenses = findViewById(R.id.fabExpenses);
         fabShowPaymentsDay = findViewById(R.id.fabShowPaymentsDay);
         fabPayDay = findViewById(R.id.fabPayDay);
+        fabDone = findViewById(R.id.fabDone);
 
         search  = findViewById(R.id.searchLoan);
         loans = findViewById(R.id.list);
@@ -134,6 +136,11 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 Intent intent = new Intent(MainActivity.this, ShowLoansPayDay.class);
                 startActivity(intent);
             }
+        });
+
+        fabDone.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, LoansDone.class);
+            startActivity(intent);
         });
 
     }
