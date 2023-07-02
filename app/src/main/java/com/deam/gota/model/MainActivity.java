@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.deam.gota.R;
 import com.deam.gota.dataBases.DbPayments;
+import com.deam.gota.model.loans.ShowDataLoan;
 import com.deam.gota.model.loans.ShowLoansPayDay;
 import com.deam.gota.model.loans.ShowPayments;
 import com.deam.gota.adapters.ListLoanAdapter;
@@ -43,7 +44,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private SwipeRefreshLayout swipeRefreshLayout;
     ListLoanAdapter adapter;
     private DbLoans dbLoans;
-    private Button example;
     private DbClients dbClients;
     private DbPayments dbPayments;
 
@@ -64,8 +64,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         fabShowPaymentsDay = findViewById(R.id.fabShowPaymentsDay);
         fabPayDay = findViewById(R.id.fabPayDay);
 
-        example = findViewById(R.id.example);
-
         search  = findViewById(R.id.searchLoan);
         loans = findViewById(R.id.list);
 
@@ -84,17 +82,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         dbPayments = new DbPayments(this);
 
         setAdapterList();
-
-        example.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(dbClients.exportClientsToDB()) {
-                    Toast.makeText(MainActivity.this, Environment.getExternalStorageDirectory() + "", Toast.LENGTH_SHORT).show();
-                }else {
-                    Toast.makeText(MainActivity.this, "ERROR", Toast.LENGTH_SHORT).show();
-                }
-                }
-        });
 
         fabAddLoan.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,6 +137,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         });
 
     }
+
 
     @Override
     protected void onResume() {
@@ -208,6 +196,18 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         ArrayList<Payments> allPayments = dbPayments.showPayments();
 
         for (Loans loan : allLoans) {
+            double saldo = 0.0;
+            boolean finish = false;
+
+            for (Payments payment : allPayments) {
+                if (loan.getId() == payment.getIdLoans()) {
+                    saldo += payment.getAmount();
+                }
+            }
+            if (saldo >= Double.parseDouble(loan.getLoan())) {
+                finish = true;
+            }
+
             boolean hasPaymentOnDate = false;
             for (Payments payment : allPayments) {
                 if (loan.getId() == payment.getIdLoans() && payment.getDate().equals(fecha)) {
@@ -215,7 +215,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     break;
                 }
             }
-            if (!hasPaymentOnDate) {
+
+            if (!hasPaymentOnDate && !finish) {
                 listLoans.add(loan);
             }
         }

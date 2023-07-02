@@ -59,7 +59,6 @@ public class ListClientAdapterToLoan extends RecyclerView.Adapter<ListClientAdap
                     Intent intent = new Intent(context, AddLoan.class);
                     intent.putExtra("ID", listClients.get(getAdapterPosition()).getId());
                     context.startActivity(intent);
-
                 }
             });
         }

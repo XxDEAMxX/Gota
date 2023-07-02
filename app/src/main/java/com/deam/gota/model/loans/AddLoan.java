@@ -22,7 +22,6 @@ import com.deam.gota.pojos.Clients;
 import java.util.Calendar;
 
 public class AddLoan extends AppCompatActivity {
-
     private EditText date;
     private EditText quotas;
     private EditText loan;
@@ -138,6 +137,7 @@ public class AddLoan extends AppCompatActivity {
             Toast.makeText(this, "LLENE TODOS LOS ESPACIOS", Toast.LENGTH_SHORT).show();
         }
     }
+
 
 
 
